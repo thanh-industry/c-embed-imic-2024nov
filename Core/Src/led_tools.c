@@ -23,4 +23,5 @@ void ledBlink(uint32_t led, uint32_t delayms) {
 	ledSet(led, on);
 	HAL_Delay(delayms);
 	ledSet(led, off);
+	HAL_Delay(delayms);
 }

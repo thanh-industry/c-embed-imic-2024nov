@@ -11,20 +11,29 @@
 #include "led_tools.h"
 
 void gpiosInit(void) {
-	/* START register set up for for PIN 12, 13, 14, 15 in PORT D */
+	// Enable clock in AHB1 peripheral for using PORT A, D, H
+	registerBitSet(RCC_AHB1ENR, BIT_0 | BIT_3 | BIT_7);
+
+	/* START registers set up for for PIN 12, 13, 14, 15 in PORT A */
+
+
+
+	/* END registers set up for for PIN 12, 13, 14, 15 in PORT A */
+
+	/* START registers set up for for PIN 12, 13, 14, 15 in PORT D */
 
 	// For MODER, set mode 01 (General purpose output mode)
-	registerBitSet( GPIO_D_MODER, BIT_24 | BIT_26 | BIT_28 | BIT_30);
-	registerBitClear(GPIO_D_MODER, BIT_25 | BIT_27 | BIT_29 | BIT_31);
+	registerBitSet(GPIO_D_MODER, (BIT_24 | BIT_26 | BIT_28 | BIT_30));
+	registerBitClear(GPIO_D_MODER, (BIT_25 | BIT_27 | BIT_29 | BIT_31));
 
 	// For OTYPER, using mode 0: Output push-pull
 	registerBitClear(GPIO_D_OTYPER, LED_BLUE | LED_RED | LED_GREEN | LED_ORANGE);
 
 	// For OSPEEDR, using mode 00: Low speed
-	registerBitClear(GPIO_D_OSPEEDR, BIT_24 | BIT_25 | BIT_26 | BIT_27 | BIT_28 | BIT_29 | BIT_30 | BIT_31);
+	registerBitClear(GPIO_D_OSPEEDR, (BIT_24 | BIT_25 | BIT_26 | BIT_27 | BIT_28 | BIT_29 | BIT_30 | BIT_31));
 
 	// For PUPDR, using mode 00: No Pull-up/ Pull-down
-	registerBitClear(GPIO_D_PUPDR, BIT_24 | BIT_25 | BIT_26 | BIT_27 | BIT_28 | BIT_29 | BIT_30 | BIT_31);
+	registerBitClear(GPIO_D_PUPDR, (BIT_24 | BIT_25 | BIT_26 | BIT_27 | BIT_28 | BIT_29 | BIT_30 | BIT_31));
 
 	/*
 	 * For IDR, no input data
@@ -48,16 +57,20 @@ void gpiosInit(void) {
 	 * After the first lock sequence on any bit, any read to LCKK (LCKR[16]) bit return '1' until next reset
 	 * */
 
-	  //start the lock sequence for
-	  registerBitSet(GPIO_D_LCKR, LOCK_KEY | LED_BLUE | LED_RED | LED_GREEN | LED_ORANGE);
-	  registerBitClear(GPIO_D_LCKR, LOCK_KEY);
-	  registerBitSet(GPIO_D_LCKR, LOCK_KEY);
+	 //start the lock sequence for
+	 registerBitSet(GPIO_D_LCKR, (LOCK_KEY | LED_BLUE | LED_RED | LED_GREEN | LED_ORANGE));
+	 registerBitClear(GPIO_D_LCKR, (LED_BLUE | LED_RED | LED_GREEN | LED_ORANGE));
+	 registerBitSet(GPIO_D_LCKR, LOCK_KEY | LED_BLUE | LED_RED | LED_GREEN | LED_ORANGE);
 
-	  uint32_t value = registerRead(GPIO_D_LCKR);
-	  if (value == (LOCK_KEY | LED_BLUE | LED_RED | LED_GREEN | LED_ORANGE)) {
+	 uint32_t value = registerRead(GPIO_D_LCKR);
+	 if (value == (LOCK_KEY | LED_BLUE | LED_RED | LED_GREEN | LED_ORANGE)) {
 		  ledBlink(LED_ORANGE, 200);
-	  }
+	 }
 
 
-	  /* END register set up for for PIN 12, 13, 14, 15 in PORT D */
+	 /* END registers set up for for PIN 12, 13, 14, 15 in PORT D */
+
+	 /* START registers set up for for PIN 12, 13, 14, 15 in PORT H */
+
+	 /* END registers set up for for PIN 12, 13, 14, 15 in PORT H */
 }
