@@ -11,6 +11,10 @@
 #include "led_tools.h"
 
 void gpiosInit(void) {
+	registerSetup();
+}
+
+void registerSetup(void) {
 	// Enable clock in AHB1 peripheral for using PORT A, D, H
 	registerBitSet(RCC_AHB1ENR, BIT_0 | BIT_3 | BIT_7);
 
@@ -56,14 +60,19 @@ void gpiosInit(void) {
 
 	 //start the lock sequence for
 	 registerBitSet(GPIO_D_LCKR, (LOCK_KEY | LED_BLUE | LED_RED | LED_GREEN | LED_ORANGE));
-	 registerBitClear(GPIO_D_LCKR, (LED_BLUE | LED_RED | LED_GREEN | LED_ORANGE));
-	 registerBitSet(GPIO_D_LCKR, LOCK_KEY | LED_BLUE | LED_RED | LED_GREEN | LED_ORANGE);
-	 uint32_t value = registerRead(GPIO_D_LCKR);
+	 registerBitSet(GPIO_D_LCKR, (LED_BLUE | LED_RED | LED_GREEN | LED_ORANGE));
+	 registerBitSet(GPIO_D_LCKR, (LOCK_KEY | LED_BLUE | LED_RED | LED_GREEN | LED_ORANGE));
+	 uint32_t value;
+	 value = registerRead(GPIO_D_LCKR);
+	 UNUSED(value);
 
-	 // Check
-	 if (value == (LOCK_KEY)) {
+	 // Check if the LOCK is enabled
+	 /*
+	  * if (value & LOCK_KEY) {
 		  ledBlink(LED_ORANGE, 200);
 	 }
+	  * */
+
 
 
 	 /* END registers set up for for PIN 12, 13, 14, 15 in PORT D */
