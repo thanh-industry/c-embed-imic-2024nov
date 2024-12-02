@@ -15,9 +15,6 @@ void gpiosInit(void) {
 	registerBitSet(RCC_AHB1ENR, BIT_0 | BIT_3 | BIT_7);
 
 	/* START registers set up for for PIN 12, 13, 14, 15 in PORT A */
-
-
-
 	/* END registers set up for for PIN 12, 13, 14, 15 in PORT A */
 
 	/* START registers set up for for PIN 12, 13, 14, 15 in PORT D */
@@ -61,9 +58,10 @@ void gpiosInit(void) {
 	 registerBitSet(GPIO_D_LCKR, (LOCK_KEY | LED_BLUE | LED_RED | LED_GREEN | LED_ORANGE));
 	 registerBitClear(GPIO_D_LCKR, (LED_BLUE | LED_RED | LED_GREEN | LED_ORANGE));
 	 registerBitSet(GPIO_D_LCKR, LOCK_KEY | LED_BLUE | LED_RED | LED_GREEN | LED_ORANGE);
-
 	 uint32_t value = registerRead(GPIO_D_LCKR);
-	 if (value == (LOCK_KEY | LED_BLUE | LED_RED | LED_GREEN | LED_ORANGE)) {
+
+	 // Check
+	 if (value == (LOCK_KEY)) {
 		  ledBlink(LED_ORANGE, 200);
 	 }
 
@@ -71,6 +69,5 @@ void gpiosInit(void) {
 	 /* END registers set up for for PIN 12, 13, 14, 15 in PORT D */
 
 	 /* START registers set up for for PIN 12, 13, 14, 15 in PORT H */
-
 	 /* END registers set up for for PIN 12, 13, 14, 15 in PORT H */
 }
