@@ -5,6 +5,7 @@
  *      Author: daoch
  */
 
+//#include <stm32f407xx.h>
 #include "registers_tools.h"
 #include "registers_defs.h"
 #include "gpios_init.h"
@@ -15,26 +16,53 @@ void gpiosInit(void) {
 }
 
 void registerSetup(void) {
-	// Enable clock in AHB1 peripheral for using PORT A, D, H
-	registerBitSet(RCC_AHB1ENR, BIT_0 | BIT_3 | BIT_7);
+	// Enable clock in AHB1 peripheral for using general purpose I/O function PORT A, D, H
+	registerBitSet(REG_RCC_AHB1ENR, BIT_0 | BIT_3 | BIT_7);
+	// Enable clock in APB2 peripheral for using system configuration function in PORT A
+	registerBitSet(REG_RCC_APB2ENR, BIT_14);
 
-	/* START registers set up for for PIN 12, 13, 14, 15 in PORT A */
-	/* END registers set up for for PIN 12, 13, 14, 15 in PORT A */
+	/* registers set up for Extend Interrupt in PORT A*/
+
+	// Enable EXTI0 group for PA0 button PIN (Mode 0000) in SYSCFG external interrupt configuration register 1
+	registerBitClear(REG_SYSCFG_EXTICR1, (BIT_0 | BIT_1 | BIT_2 | BIT_3));
+	// Un-mask EXTI0 group in Interrupt mask register (EXTI_IMR) for enabling detecting interrupt
+	registerBitClear(REG_EXTI_IMR, BIT_0);
+	// Set Rising trigger selection register (EXTI_RTSR) for rising edge at EXTI0 group
+	registerBitSet(REG_EXTI_RTSR, BIT_0);
+	// Set Falling trigger selection register (EXTI_FTSR) for falling edge at EXTI0 group
+	registerBitSet(REG_EXTI_FTSR, BIT_0);
+	// Set Interrupt set-enable register 0 (NVIC_ISERx) enable interrupt number 0
+	registerBitSet(REG_NVIC_ISER0, BIT_0);
+
+
+
+	/* START registers set up for USER BUTTON PIN PA0 in PORT A */
+
+	// For MODER, set mode 00 (General purpose input mode)
+	registerBitClear(REG_GPIO_A_MODER, (BIT_0 | BIT_1));
+
+	// For PUPDR, using mode 00: No Pull-up/ Pull-down
+	registerBitClear(REG_GPIO_A_PUPDR, (BIT_0 | BIT_1));
+
+	// Enable IRQ at EXTI0 group in NVIC (Nested vectored interrupt controller) using CMSIS function
+	//NVIC_EnableIRQ(EXTI0_IRQn);
+
+	/* END registers set up for for USER BUTTON PIN 0  in PORT A */
 
 	/* START registers set up for for PIN 12, 13, 14, 15 in PORT D */
 
 	// For MODER, set mode 01 (General purpose output mode)
-	registerBitSet(GPIO_D_MODER, (BIT_24 | BIT_26 | BIT_28 | BIT_30));
-	registerBitClear(GPIO_D_MODER, (BIT_25 | BIT_27 | BIT_29 | BIT_31));
+	registerBitSet(REG_GPIO_D_MODER, (BIT_24 | BIT_26 | BIT_28 | BIT_30));
+	registerBitClear(REG_GPIO_D_MODER, (BIT_25 | BIT_27 | BIT_29 | BIT_31));
 
 	// For OTYPER, using mode 0: Output push-pull
-	registerBitClear(GPIO_D_OTYPER, LED_BLUE | LED_RED | LED_GREEN | LED_ORANGE);
+	registerBitClear(REG_GPIO_D_OTYPER, LED_BLUE | LED_RED | LED_GREEN | LED_ORANGE);
 
 	// For OSPEEDR, using mode 00: Low speed
-	registerBitClear(GPIO_D_OSPEEDR, (BIT_24 | BIT_25 | BIT_26 | BIT_27 | BIT_28 | BIT_29 | BIT_30 | BIT_31));
+	registerBitClear(REG_GPIO_D_OSPEEDR, (BIT_24 | BIT_25 | BIT_26 | BIT_27 | BIT_28 | BIT_29 | BIT_30 | BIT_31));
 
 	// For PUPDR, using mode 00: No Pull-up/ Pull-down
-	registerBitClear(GPIO_D_PUPDR, (BIT_24 | BIT_25 | BIT_26 | BIT_27 | BIT_28 | BIT_29 | BIT_30 | BIT_31));
+	registerBitClear(REG_GPIO_D_PUPDR, (BIT_24 | BIT_25 | BIT_26 | BIT_27 | BIT_28 | BIT_29 | BIT_30 | BIT_31));
 
 	/*
 	 * For IDR, no input data
@@ -59,12 +87,12 @@ void registerSetup(void) {
 	 * */
 
 	 //start the lock sequence for
-	 registerBitSet(GPIO_D_LCKR, (LOCK_KEY | LED_BLUE | LED_RED | LED_GREEN | LED_ORANGE));
-	 registerBitSet(GPIO_D_LCKR, (LED_BLUE | LED_RED | LED_GREEN | LED_ORANGE));
-	 registerBitSet(GPIO_D_LCKR, (LOCK_KEY | LED_BLUE | LED_RED | LED_GREEN | LED_ORANGE));
+	 registerBitSet(REG_GPIO_D_LCKR, (LOCK_KEY | LED_BLUE | LED_RED | LED_GREEN | LED_ORANGE));
+	 registerBitSet(REG_GPIO_D_LCKR, (LED_BLUE | LED_RED | LED_GREEN | LED_ORANGE));
+	 registerBitSet(REG_GPIO_D_LCKR, (LOCK_KEY | LED_BLUE | LED_RED | LED_GREEN | LED_ORANGE));
 	 uint32_t value;
-	 value = registerRead(GPIO_D_LCKR);
-	 UNUSED(value);
+	 value = registerRead(REG_GPIO_D_LCKR);
+	 NOUSED(value);
 
 	 // Check if the LOCK is enabled
 	 /*
@@ -73,9 +101,9 @@ void registerSetup(void) {
 	 }
 	  * */
 
-
-
 	 /* END registers set up for for PIN 12, 13, 14, 15 in PORT D */
+
+
 
 	 /* START registers set up for for PIN 12, 13, 14, 15 in PORT H */
 	 /* END registers set up for for PIN 12, 13, 14, 15 in PORT H */

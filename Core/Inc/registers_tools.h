@@ -8,7 +8,8 @@
 #ifndef INC_REGISTERS_TOOLS_H_
 #define INC_REGISTERS_TOOLS_H_
 
-#include "stdint.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 // define the bit mask by doing left shift bitwise operator for every bit in a register
 #define BIT_0 	((uint32_t)(1U << 0))
@@ -44,7 +45,7 @@
 #define BIT_30 	((uint32_t)(1U << 30))
 #define BIT_31 	((uint32_t)(1U << 31))
 
-#define UNUSED(x) (void)x
+#define NOUSED(x) (void)x
 
 uint32_t registerRead(uint32_t *registerAddress);
 
@@ -53,5 +54,7 @@ void registerWrite(uint32_t *registerAddress, uint32_t value);
 void registerBitSet(uint32_t *registerAddress, uint32_t mask);
 
 void registerBitClear(uint32_t *registerAddress, uint32_t mask);
+
+bool registerBitCheck(uint32_t *registerAddress, uint32_t mask);
 
 #endif /* INC_REGISTERS_TOOLS_H_ */

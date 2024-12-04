@@ -47,14 +47,16 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+static bool extiAlarmPA0 = false;
+static bool on = true;
+static bool off = false;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
-
+void EXTI0_IRQHandler(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -105,6 +107,11 @@ int main(void)
 	  ledBlink(LED_RED, 1000);
 	  ledBlink(LED_GREEN, 1000);
 	  ledBlink(LED_BLUE, 1000);
+	  if (extiAlarmPA0) {
+		  extiAlarmPA0 = false;
+		  if (registerBitCheck(REG_GPIO_A_IDR, BIT_0)) ledSet(LED_RED, on);
+		  else ledSet(LED_RED, off);
+	  }
   }
   /* USER CODE END 3 */
 }
@@ -166,11 +173,17 @@ static void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOH_CLK_ENABLE();
-  __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, Green_LED_Pin|Orange_LED_Pin|Red_LED_Pin|Blue_LED_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : PA0 */
+  GPIO_InitStruct.Pin = GPIO_PIN_0;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : Green_LED_Pin Orange_LED_Pin Red_LED_Pin Blue_LED_Pin */
   GPIO_InitStruct.Pin = Green_LED_Pin|Orange_LED_Pin|Red_LED_Pin|Blue_LED_Pin;
@@ -184,7 +197,13 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void EXTI0_IRQHandler(void) {
+	uint32_t pending = registerRead(REG_EXTI_PR);
+	NOUSED(pending);
+	bool match = registerBitCheck(REG_EXTI_PR, BIT_0);
+	if (match) registerBitSet(REG_EXTI_PR, BIT_0);
+	extiAlarmPA0 = true;
+}
 /* USER CODE END 4 */
 
 /**

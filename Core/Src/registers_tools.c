@@ -7,6 +7,7 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include "registers_tools.h"
 
 uint32_t registerRead(uint32_t *registerAddress) {
@@ -33,5 +34,9 @@ void registerBitClear(uint32_t *registerAddress, uint32_t mask) {
 	registerWrite(registerAddress, reg);
 }
 
-
+bool registerBitCheck(uint32_t *registerAddress, uint32_t mask) {
+	if (registerAddress == NULL) return false;
+	if (*registerAddress & mask) return true;
+	else return false;
+}
 
