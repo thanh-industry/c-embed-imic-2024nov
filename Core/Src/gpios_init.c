@@ -12,28 +12,12 @@
 #include "led_tools.h"
 
 void gpiosInit(void) {
-	registerSetup();
+	gpioRegisterSetup();
 }
 
-void registerSetup(void) {
+void gpioRegisterSetup(void) {
 	// Enable clock in AHB1 peripheral for using general purpose I/O function PORT A, D, H
 	registerBitSet(REG_RCC_AHB1ENR, BIT_0 | BIT_3 | BIT_7);
-	// Enable clock in APB2 peripheral for using system configuration function in PORT A
-	registerBitSet(REG_RCC_APB2ENR, BIT_14);
-
-	/* registers set up for Extend Interrupt in PORT A*/
-
-	// Enable EXTI0 group for PA0 button PIN (Mode 0000) in SYSCFG external interrupt configuration register 1
-	registerBitClear(REG_SYSCFG_EXTICR1, (BIT_0 | BIT_1 | BIT_2 | BIT_3));
-	// Un-mask EXTI0 group in Interrupt mask register (EXTI_IMR) for enabling detecting interrupt
-	registerBitClear(REG_EXTI_IMR, BIT_0);
-	// Set Rising trigger selection register (EXTI_RTSR) for rising edge at EXTI0 group
-	registerBitSet(REG_EXTI_RTSR, BIT_0);
-	// Set Falling trigger selection register (EXTI_FTSR) for falling edge at EXTI0 group
-	registerBitSet(REG_EXTI_FTSR, BIT_0);
-	// Set Interrupt set-enable register 0 (NVIC_ISERx) enable interrupt number 0
-	registerBitSet(REG_NVIC_ISER0, BIT_0);
-
 
 
 	/* START registers set up for USER BUTTON PIN PA0 in PORT A */
@@ -41,8 +25,9 @@ void registerSetup(void) {
 	// For MODER, set mode 00 (General purpose input mode)
 	registerBitClear(REG_GPIO_A_MODER, (BIT_0 | BIT_1));
 
-	// For PUPDR, using mode 00: No Pull-up/ Pull-down
-	registerBitClear(REG_GPIO_A_PUPDR, (BIT_0 | BIT_1));
+	// For PUPDR, using mode 01: Pull-up mode
+	registerBitSet(REG_GPIO_A_PUPDR, BIT_0);
+	registerBitClear(REG_GPIO_A_PUPDR, BIT_1);
 
 	// Enable IRQ at EXTI0 group in NVIC (Nested vectored interrupt controller) using CMSIS function
 	//NVIC_EnableIRQ(EXTI0_IRQn);
@@ -85,7 +70,7 @@ void registerSetup(void) {
 	 * any error in sequence aborts LOCK
 	 * After the first lock sequence on any bit, any read to LCKK (LCKR[16]) bit return '1' until next reset
 	 * */
-
+	/*
 	 //start the lock sequence for
 	 registerBitSet(REG_GPIO_D_LCKR, (LOCK_KEY | LED_BLUE | LED_RED | LED_GREEN | LED_ORANGE));
 	 registerBitSet(REG_GPIO_D_LCKR, (LED_BLUE | LED_RED | LED_GREEN | LED_ORANGE));
@@ -95,11 +80,15 @@ void registerSetup(void) {
 	 NOUSED(value);
 
 	 // Check if the LOCK is enabled
-	 /*
-	  * if (value & LOCK_KEY) {
+
+	 if (value & LOCK_KEY) {
 		  ledBlink(LED_ORANGE, 200);
 	 }
-	  * */
+
+	 * */
+
+
+
 
 	 /* END registers set up for for PIN 12, 13, 14, 15 in PORT D */
 

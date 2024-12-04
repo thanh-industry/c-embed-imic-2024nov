@@ -16,6 +16,6 @@
 
 void gpiosInit(void);
 
-void registerSetup(void);
+void gpioRegisterSetup(void);
 
 #endif /* INC_GPIOS_INIT_H_ */

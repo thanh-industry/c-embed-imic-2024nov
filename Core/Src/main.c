@@ -27,6 +27,7 @@
 #include "registers_tools.h"
 #include "registers_defs.h"
 #include "gpios_init.h"
+#include "interrupts_init.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,8 +49,9 @@
 
 /* USER CODE BEGIN PV */
 static bool extiAlarmPA0 = false;
-static bool on = true;
-static bool off = false;
+//static bool on = true;
+//static bool off = false;
+//static int count = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -89,6 +91,11 @@ int main(void)
 
   /* USER CODE BEGIN SysInit */
   gpiosInit();
+  interruptsInit();
+
+  // Set priority and enable NVIC (Nested vectored interrupt controller)
+  HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -104,13 +111,16 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  ledBlink(LED_RED, 1000);
-	  ledBlink(LED_GREEN, 1000);
-	  ledBlink(LED_BLUE, 1000);
-	  if (extiAlarmPA0) {
+
+	  if (!extiAlarmPA0) {
+		  ledBlink(LED_RED, 500);
+		  ledBlink(LED_GREEN, 500);
+		  ledBlink(LED_BLUE, 500);
+
+	  }
+	  else {
 		  extiAlarmPA0 = false;
-		  if (registerBitCheck(REG_GPIO_A_IDR, BIT_0)) ledSet(LED_RED, on);
-		  else ledSet(LED_RED, off);
+		  ledBlink(LED_ORANGE, 2000);
 	  }
   }
   /* USER CODE END 3 */
@@ -179,11 +189,11 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, Green_LED_Pin|Orange_LED_Pin|Red_LED_Pin|Blue_LED_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : PA0 */
-  GPIO_InitStruct.Pin = GPIO_PIN_0;
+  /*Configure GPIO pin : USER_BUTTON_Pin */
+  GPIO_InitStruct.Pin = USER_BUTTON_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  HAL_GPIO_Init(USER_BUTTON_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : Green_LED_Pin Orange_LED_Pin Red_LED_Pin Blue_LED_Pin */
   GPIO_InitStruct.Pin = Green_LED_Pin|Orange_LED_Pin|Red_LED_Pin|Blue_LED_Pin;
@@ -198,11 +208,13 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 void EXTI0_IRQHandler(void) {
-	uint32_t pending = registerRead(REG_EXTI_PR);
-	NOUSED(pending);
-	bool match = registerBitCheck(REG_EXTI_PR, BIT_0);
-	if (match) registerBitSet(REG_EXTI_PR, BIT_0);
-	extiAlarmPA0 = true;
+	//Check if pending is at PA0
+	if (registerBitCheck(REG_EXTI_PR, BIT_0)) {
+		// Clear the pending at PA0
+		registerBitSet(REG_EXTI_PR, BIT_0);
+		// Set the alarm variable of PA0
+		extiAlarmPA0 = true;
+	}
 }
 /* USER CODE END 4 */
 
