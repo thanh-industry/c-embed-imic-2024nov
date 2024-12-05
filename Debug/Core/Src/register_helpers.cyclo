@@ -1,0 +1,4 @@
+../Core/Src/register_helpers.c:11:10:read_register	2
+../Core/Src/register_helpers.c:18:6:write_register	2
+../Core/Src/register_helpers.c:26:6:set_bit	2
+../Core/Src/register_helpers.c:35:6:clear_bit	2

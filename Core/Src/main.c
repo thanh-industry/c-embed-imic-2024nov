@@ -64,6 +64,7 @@ static void MX_GPIO_Init(void);
   */
 int main(void)
 {
+
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
@@ -88,11 +89,18 @@ int main(void)
   //MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
 
-  set_bits(GPIOB_MODER, BIT_14);
-  clear_bits(GPIOB_MODER, BIT_15);
+  // set to 01 that config output mode
+  //clear_bit(GPIOD_MODER, BIT_27);
+  set_bit(GPIOD_MODER, BIT_0 | BIT_1 | BIT_2 | BIT_3);
+  set_bit(GPIOD_OTYPER, BIT_31 | BIT_30 | BIT_2 | BIT_28);
+  // set to 1 that config open-drain
+  //clear_bit(GPIOD_OTYPER, BIT_13);
 
-  set_bits(GPIOB_TYPER, BIT_7);
+  // set to 00 that config low speed
+  //clear_bit(GPIOD_OSPEEDR, BIT_27 | BIT_26);
 
+  //set_bit(GPIOD_ODR, BIT_13);
+  //clear_bit(GPIOD_ODR, BIT_13);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -100,7 +108,7 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-	  ;
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -118,7 +126,7 @@ void SystemClock_Config(void)
   /** Configure the main internal regulator output voltage
   */
   __HAL_RCC_PWR_CLK_ENABLE();
-  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE3);
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
@@ -138,8 +146,8 @@ void SystemClock_Config(void)
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV4;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
   {
@@ -159,17 +167,21 @@ static void MX_GPIO_Init(void)
 /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOH_CLK_ENABLE();
+  __HAL_RCC_GPIOD_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LED_BLUE_GPIO_Port, LED_BLUE_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOD, LD4_Pin|LD3_Pin|LD5_Pin|LD6_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : LED_BLUE_Pin */
-  GPIO_InitStruct.Pin = LED_BLUE_Pin;
+  /*Configure GPIO pins : LD4_Pin LD3_Pin LD5_Pin LD6_Pin */
+  GPIO_InitStruct.Pin = LD4_Pin|LD3_Pin|LD5_Pin|LD6_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LED_BLUE_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
