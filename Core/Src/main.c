@@ -74,7 +74,6 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -95,7 +94,8 @@ int main(void)
 
   // Set priority and enable NVIC (Nested vectored interrupt controller)
   HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+  //HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+  NVIC_EnableIRQ(EXTI0_IRQn);
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -111,16 +111,22 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
 	  if (!extiAlarmPA0) {
 		  ledBlink(LED_RED, 500);
 		  ledBlink(LED_GREEN, 500);
 		  ledBlink(LED_BLUE, 500);
-
+		  /*
+		  registerBitSet(REG_GPIO_A_BSRR, BIT_1);
+		  HAL_Delay(1000);
+		  registerBitSet(REG_GPIO_A_BSRR, BIT_1 << 16);
+		  registerBitSet(REG_GPIO_A_BSRR, BIT_0);
+		  HAL_Delay(1000);
+		  registerBitSet(REG_GPIO_A_BSRR, BIT_0 << 16);
+		   */
 	  }
 	  else {
 		  extiAlarmPA0 = false;
-		  ledBlink(LED_ORANGE, 2000);
+		  ledBlink(LED_ORANGE, 500);
 	  }
   }
   /* USER CODE END 3 */
