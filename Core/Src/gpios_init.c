@@ -26,7 +26,7 @@ void gpioRegisterSetup(void) {
 	registerBitClear(REG_GPIO_A_MODER, (BIT_0 | BIT_1));
 
 	// For PUPDR, using mode 00: No Pull-up/ Pull-down
-	registerBitSet(REG_GPIO_A_PUPDR, (BIT_0 | BIT_1));
+	registerBitClear(REG_GPIO_A_PUPDR, (BIT_0 | BIT_1));
 
 	/* END registers set up USER BUTTON PIN 0  in PORT A */
 
