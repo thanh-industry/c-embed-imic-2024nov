@@ -1,5 +1,7 @@
+"./Core/My_Lib/exti.o"
+"./Core/My_Lib/gpio.o"
+"./Core/My_Lib/register_helpers.o"
 "./Core/Src/main.o"
-"./Core/Src/register_helpers.o"
 "./Core/Src/stm32f4xx_hal_msp.o"
 "./Core/Src/stm32f4xx_it.o"
 "./Core/Src/syscalls.o"

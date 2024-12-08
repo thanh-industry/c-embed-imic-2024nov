@@ -842,18 +842,19 @@ ARM Macro Assembler    Page 13
               00000200 
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp.sp --apcs=
-interwork --depend=blink_led\startup_stm32f407xx.d -oblink_led\startup_stm32f40
+interwork --depend=c-embed-imic-2024nov\startup_stm32f407xx.d -oc-embed-imic-20
 
 
 
 ARM Macro Assembler    Page 14 
 
 
-7xx.o -I.\RTE\_Blink_Led -IC:\Users\Huy\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0
-\CMSIS\Core\Include -IC:\Users\Huy\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2
-.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include --predefine="__UVISION_VERSION 
-SETA 531" --predefine="_RTE_ SETA 1" --predefine="STM32F407xx SETA 1" --predefi
-ne="_RTE_ SETA 1" --list=startup_stm32f407xx.lst startup_stm32f407xx.s
+24nov\startup_stm32f407xx.o -I.\RTE\_c-embed-imic-2024nov -IC:\Users\Huy\AppDat
+a\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include -IC:\Users\Huy\AppData\Loc
+al\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Includ
+e --predefine="__UVISION_VERSION SETA 531" --predefine="_RTE_ SETA 1" --predefi
+ne="STM32F407xx SETA 1" --predefine="_RTE_ SETA 1" --list=startup_stm32f407xx.l
+st startup_stm32f407xx.s
 
 
 

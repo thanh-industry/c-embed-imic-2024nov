@@ -1,0 +1,3 @@
+../Core/My_Lib/gpio.c:3:6:gpio_init	32	static
+../Core/My_Lib/gpio.c:53:6:gpio_write	16	static
+../Core/My_Lib/gpio.c:67:10:gpio_read	24	static

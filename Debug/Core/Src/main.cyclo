@@ -1,4 +1,5 @@
-../Core/Src/main.c:65:5:main	1
+../Core/Src/main.c:59:6:EXTI0_IRQHandler	1
+../Core/Src/main.c:69:5:main	2
 ../Core/Src/main.c:121:6:SystemClock_Config	3
-../Core/Src/main.c:163:13:MX_GPIO_Init	1
-../Core/Src/main.c:198:6:Error_Handler	1
+../Core/Src/main.c:168:13:MX_GPIO_Init	1
+../Core/Src/main.c:313:6:Error_Handler	1

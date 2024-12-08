@@ -1,0 +1,28 @@
+--cpu=Cortex-M4.fp.sp
+"c-embed-imic-2024nov\startup_stm32f407xx.o"
+"c-embed-imic-2024nov\main.o"
+"c-embed-imic-2024nov\stm32f4xx_it.o"
+"c-embed-imic-2024nov\stm32f4xx_hal_msp.o"
+"c-embed-imic-2024nov\stm32f4xx_hal_tim.o"
+"c-embed-imic-2024nov\stm32f4xx_hal_tim_ex.o"
+"c-embed-imic-2024nov\stm32f4xx_hal_rcc.o"
+"c-embed-imic-2024nov\stm32f4xx_hal_rcc_ex.o"
+"c-embed-imic-2024nov\stm32f4xx_hal_flash.o"
+"c-embed-imic-2024nov\stm32f4xx_hal_flash_ex.o"
+"c-embed-imic-2024nov\stm32f4xx_hal_flash_ramfunc.o"
+"c-embed-imic-2024nov\stm32f4xx_hal_gpio.o"
+"c-embed-imic-2024nov\stm32f4xx_hal_dma_ex.o"
+"c-embed-imic-2024nov\stm32f4xx_hal_dma.o"
+"c-embed-imic-2024nov\stm32f4xx_hal_pwr.o"
+"c-embed-imic-2024nov\stm32f4xx_hal_pwr_ex.o"
+"c-embed-imic-2024nov\stm32f4xx_hal_cortex.o"
+"c-embed-imic-2024nov\stm32f4xx_hal.o"
+"c-embed-imic-2024nov\stm32f4xx_hal_exti.o"
+"c-embed-imic-2024nov\system_stm32f4xx.o"
+"c-embed-imic-2024nov\gpio.o"
+"c-embed-imic-2024nov\register_helpers.o"
+"c-embed-imic-2024nov\exti.o"
+--strict --scatter "c-embed-imic-2024nov\c-embed-imic-2024nov.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "c-embed-imic-2024nov.map" -o c-embed-imic-2024nov\c-embed-imic-2024nov.axf
