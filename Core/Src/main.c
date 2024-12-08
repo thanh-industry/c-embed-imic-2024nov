@@ -59,6 +59,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
 void EXTI0_IRQHandler(void);
+void interferenceCheck(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -115,19 +116,11 @@ int main(void)
 		  ledBlink(LED_RED, 500);
 		  ledBlink(LED_GREEN, 500);
 		  ledBlink(LED_BLUE, 500);
-		  /*
-		  registerBitSet(REG_GPIO_A_BSRR, BIT_1);
-		  HAL_Delay(1000);
-		  registerBitSet(REG_GPIO_A_BSRR, BIT_1 << 16);
-		  registerBitSet(REG_GPIO_A_BSRR, BIT_0);
-		  HAL_Delay(1000);
-		  registerBitSet(REG_GPIO_A_BSRR, BIT_0 << 16);
-		   */
 	  }
 	  else {
-		  extiAlarmPA0 = false;
-		  ledBlink(LED_ORANGE, 500);
+		  interferenceCheck();
 	  }
+
   }
   /* USER CODE END 3 */
 }
@@ -213,6 +206,23 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void interferenceCheck(void) {
+	if (registerBitCheck(REG_GPIO_A_IDR, BIT_0)) {
+		HAL_Delay(100);
+		if (registerBitCheck(REG_GPIO_A_IDR, BIT_0)) {
+			uint32_t count = 8000000; //count value for 1s based on 8Mhz frequency
+			while (registerBitCheck(REG_GPIO_A_IDR, BIT_0) && count >= 0) {
+				count--;
+			}
+			if (count >= 0) {
+				extiAlarmPA0 = false;
+				ledBlink(LED_ORANGE, 500);
+			}
+		}
+	}
+	else extiAlarmPA0 = false;
+}
+
 void EXTI0_IRQHandler(void) {
 	//Check if pending is at PA0
 	if (registerBitCheck(REG_EXTI_PR, BIT_0)) {
