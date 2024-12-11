@@ -15,9 +15,6 @@ void interruptsInit(void) {
 }
 
 void interruptRegisterSetup(void) {
-	// Enable clock in APB2 peripheral for using system configuration function in PORT A
-	registerBitSet(REG_RCC_APB2ENR, BIT_14);
-
 
 	/* registers set up for Extend Interrupt in PORT A*/
 

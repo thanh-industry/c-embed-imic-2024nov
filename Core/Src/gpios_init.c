@@ -16,9 +16,6 @@ void gpiosInit(void) {
 }
 
 void gpioRegisterSetup(void) {
-	// Enable clock in AHB1 peripheral for using general purpose I/O function PORT A, D, H
-	registerBitSet(REG_RCC_AHB1ENR, BIT_0 | BIT_3 | BIT_7);
-
 
 	/* START registers set up USER BUTTON PIN PA0 in PORT A */
 
