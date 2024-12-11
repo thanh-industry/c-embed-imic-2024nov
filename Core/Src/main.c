@@ -22,12 +22,11 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
-#include "led_tools.h"
 #include <stdbool.h>
+#include "user_main_init.h"
 #include "registers_tools.h"
 #include "registers_defs.h"
-#include "gpios_init.h"
-#include "interrupts_init.h"
+#include "led_tools.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -49,9 +48,11 @@
 
 /* USER CODE BEGIN PV */
 static bool extiAlarmPA0 = false;
-//static bool on = true;
-//static bool off = false;
-//static int count = 0;
+static bool extiButtonToggle = false;
+static bool timer6Alarm = false;
+static bool timer6LedToggle = false;
+static bool timer7Alarm = false;
+static bool timer7LedToggle = false;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -90,13 +91,18 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-  gpiosInit();
-  interruptsInit();
-
+  userInit();
   // Set priority and enable NVIC (Nested vectored interrupt controller)
   HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
   //HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+
+  // Enable NVIC for EXTI Group 0
   NVIC_EnableIRQ(EXTI0_IRQn);
+
+  // Enable NVIC for Timer and 7
+  NVIC_EnableIRQ(TIM6_DAC_IRQn);
+  NVIC_EnableIRQ(TIM7_IRQn);
+
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -112,13 +118,28 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  if (!extiAlarmPA0) {
-		  ledBlink(LED_RED, 500);
-		  ledBlink(LED_GREEN, 500);
-		  ledBlink(LED_BLUE, 500);
+
+	  if(extiAlarmPA0) {
+		  interferenceCheck();
+	  }
+
+	  if (extiButtonToggle) {
+
+		  if (timer6Alarm) {
+			  timer6Alarm = false;
+			  timer6LedToggle ^= 1;
+			  ledSet(LED_GREEN, timer6LedToggle);
+		  }
+
+		  if (timer7Alarm) {
+			  timer7Alarm = false;
+			  timer7LedToggle ^= 1;
+			  ledSet(LED_BLUE, timer7LedToggle);
+		  }
 	  }
 	  else {
-		  interferenceCheck();
+		  ledSet(LED_GREEN, 0);
+		  ledSet(LED_BLUE, 0);
 	  }
 
   }
@@ -206,6 +227,8 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+// Check interference of button
 void interferenceCheck(void) {
 	if (registerBitCheck(REG_GPIO_A_IDR, BIT_0)) {
 		HAL_Delay(100);
@@ -215,14 +238,16 @@ void interferenceCheck(void) {
 				count--;
 			}
 			if (count >= 0) {
-				extiAlarmPA0 = false;
 				ledBlink(LED_ORANGE, 500);
+				extiAlarmPA0 = false;
+				extiButtonToggle ^= 1;
 			}
 		}
 	}
 	else extiAlarmPA0 = false;
 }
 
+// Function for NVIC EXTI0 Interrupt
 void EXTI0_IRQHandler(void) {
 	//Check if pending is at PA0
 	if (registerBitCheck(REG_EXTI_PR, BIT_0)) {
@@ -230,6 +255,28 @@ void EXTI0_IRQHandler(void) {
 		registerBitSet(REG_EXTI_PR, BIT_0);
 		// Set the alarm variable of PA0
 		extiAlarmPA0 = true;
+	}
+}
+
+// Function for NVIC TIM6 Interrupt
+void TIM6_DAC_IRQHandler(void) {
+	// Check update interrupt flag
+    if (registerBitCheck(REG_TIM6_SR, BIT_0)) {
+    	// Clear update interrupt flag
+        registerBitClear(REG_TIM6_SR, BIT_0);
+        // Set Alarm of TIM 6
+        timer6Alarm = true;
+    }
+}
+
+// Function for NVIC TIM7 Interrupt
+void TIM7_IRQHandler(void) {
+	// Check update interrupt flag
+	if (registerBitCheck(REG_TIM7_SR, BIT_0)) {
+		// Clear update interrupt flag
+		registerBitClear(REG_TIM7_SR, BIT_0);
+		// Set Alarm of TIM 7
+		timer7Alarm = true;
 	}
 }
 /* USER CODE END 4 */
