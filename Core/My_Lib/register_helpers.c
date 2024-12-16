@@ -27,7 +27,7 @@ void bit_set(uint32_t *address, uint32_t mask){
 	if (address == NULL){
 		return;
 	}
-	uint32_t reg = register_read(address);
+	volatile uint32_t reg = register_read(address);
 	reg |= mask;
 	register_write(address, reg);
 }
@@ -36,7 +36,7 @@ void bit_clear(uint32_t *address, uint32_t mask){
 	if (address == NULL){
 		return;
 	}
-	uint32_t reg = register_read(address);
+	volatile uint32_t reg = register_read(address);
 	reg &= ~mask;
 	register_write(address, reg);
 }

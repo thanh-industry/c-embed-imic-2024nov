@@ -1,7 +1,7 @@
 Dependencies for Project 'c-embed-imic-2024nov', Target 'c-embed-imic-2024nov': (DO NOT MODIFY !)
 CompilerVersion: 5060750::V5.06 update 6 (build 750)::.\ARMCC
 F (startup_stm32f407xx.s)(0x67554405)(--cpu Cortex-M4.fp.sp -g --apcs=interwork -I.\RTE\_c-embed-imic-2024nov-IC:\Users\Huy\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\Huy\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include--pd "__UVISION_VERSION SETA 531" --pd "_RTE_ SETA 1" --pd "STM32F407xx SETA 1" --pd "_RTE_ SETA 1"--list startup_stm32f407xx.lst --xref -o c-embed-imic-2024nov\startup_stm32f407xx.o --depend c-embed-imic-2024nov\startup_stm32f407xx.d)
-F (../Core/Src/main.c)(0x6755C33E)(--c99 -c --cpu Cortex-M4.fp.sp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ..\Core\My_Lib-I.\RTE\_c-embed-imic-2024nov-IC:\Users\Huy\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\Huy\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o c-embed-imic-2024nov\main.o --omf_browse c-embed-imic-2024nov\main.crf --depend c-embed-imic-2024nov\main.d)
+F (../Core/Src/main.c)(0x676016F5)(--c99 -c --cpu Cortex-M4.fp.sp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ..\Core\My_Lib-I.\RTE\_c-embed-imic-2024nov-IC:\Users\Huy\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\Huy\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o c-embed-imic-2024nov\main.o --omf_browse c-embed-imic-2024nov\main.crf --depend c-embed-imic-2024nov\main.d)
 I (../Core/Inc/main.h)(0x675516CB)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6745D25A)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x675516CB)
@@ -30,12 +30,13 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h)(0x6745D25A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h)(0x6745D25A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h)(0x6745D25A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h)(0x6745D25B)
-I (..\Core\My_Lib\my_lib.h)(0x6755B876)
+I (..\Core\My_Lib\my_lib.h)(0x6759BE98)
 I (..\Core\My_Lib\register_helpers.h)(0x6755B8AB)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5EC7840C)
-I (..\Core\My_Lib\register_defs.h)(0x6755C217)
-I (..\Core\My_Lib\gpio.h)(0x6755B86C)
+I (..\Core\My_Lib\register_defs.h)(0x675D51F5)
+I (..\Core\My_Lib\gpio.h)(0x675AFEC4)
 I (..\Core\My_Lib\exti.h)(0x6755B9EE)
+I (..\Core\My_Lib\timer.h)(0x6759BE47)
 F (../Core/Src/stm32f4xx_it.c)(0x675516CA)(--c99 -c --cpu Cortex-M4.fp.sp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ..\Core\My_Lib-I.\RTE\_c-embed-imic-2024nov-IC:\Users\Huy\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\Huy\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o c-embed-imic-2024nov\stm32f4xx_it.o --omf_browse c-embed-imic-2024nov\stm32f4xx_it.crf --depend c-embed-imic-2024nov\stm32f4xx_it.d)
 I (../Core/Inc/main.h)(0x675516CB)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6745D25A)
@@ -543,14 +544,15 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h)(0x6745D25A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h)(0x6745D25A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h)(0x6745D25A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h)(0x6745D25B)
-F (..\Core\My_Lib\gpio.c)(0x67554A09)(--c99 -c --cpu Cortex-M4.fp.sp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ..\Core\My_Lib-I.\RTE\_c-embed-imic-2024nov-IC:\Users\Huy\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\Huy\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o c-embed-imic-2024nov\gpio.o --omf_browse c-embed-imic-2024nov\gpio.crf --depend c-embed-imic-2024nov\gpio.d)
-I (..\Core\My_Lib\gpio.h)(0x6755B86C)
-I (..\Core\My_Lib\my_lib.h)(0x6755B876)
+F (..\Core\My_Lib\gpio.c)(0x675AFF5B)(--c99 -c --cpu Cortex-M4.fp.sp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ..\Core\My_Lib-I.\RTE\_c-embed-imic-2024nov-IC:\Users\Huy\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\Huy\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o c-embed-imic-2024nov\gpio.o --omf_browse c-embed-imic-2024nov\gpio.crf --depend c-embed-imic-2024nov\gpio.d)
+I (..\Core\My_Lib\gpio.h)(0x675AFEC4)
+I (..\Core\My_Lib\my_lib.h)(0x6759BE98)
 I (..\Core\My_Lib\register_helpers.h)(0x6755B8AB)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC7840C)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5EC7840C)
-I (..\Core\My_Lib\register_defs.h)(0x6755C217)
+I (..\Core\My_Lib\register_defs.h)(0x675D51F5)
 I (..\Core\My_Lib\exti.h)(0x6755B9EE)
+I (..\Core\My_Lib\timer.h)(0x6759BE47)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6745D25A)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x675516CB)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6745D25B)
@@ -577,17 +579,18 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h)(0x6745D25A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h)(0x6745D25A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h)(0x6745D25A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h)(0x6745D25B)
-F (..\Core\My_Lib\gpio.h)(0x6755B86C)()
-F (..\Core\My_Lib\my_lib.h)(0x6755B876)()
-F (..\Core\My_Lib\register_defs.h)(0x6755C217)()
-F (..\Core\My_Lib\register_helpers.c)(0x6755B89A)(--c99 -c --cpu Cortex-M4.fp.sp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ..\Core\My_Lib-I.\RTE\_c-embed-imic-2024nov-IC:\Users\Huy\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\Huy\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o c-embed-imic-2024nov\register_helpers.o --omf_browse c-embed-imic-2024nov\register_helpers.crf --depend c-embed-imic-2024nov\register_helpers.d)
+F (..\Core\My_Lib\gpio.h)(0x675AFEC4)()
+F (..\Core\My_Lib\my_lib.h)(0x6759BE98)()
+F (..\Core\My_Lib\register_defs.h)(0x675D51F5)()
+F (..\Core\My_Lib\register_helpers.c)(0x675B016B)(--c99 -c --cpu Cortex-M4.fp.sp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ..\Core\My_Lib-I.\RTE\_c-embed-imic-2024nov-IC:\Users\Huy\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\Huy\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o c-embed-imic-2024nov\register_helpers.o --omf_browse c-embed-imic-2024nov\register_helpers.crf --depend c-embed-imic-2024nov\register_helpers.d)
 I (..\Core\My_Lib\register_helpers.h)(0x6755B8AB)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC7840C)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5EC7840C)
-I (..\Core\My_Lib\my_lib.h)(0x6755B876)
-I (..\Core\My_Lib\register_defs.h)(0x6755C217)
-I (..\Core\My_Lib\gpio.h)(0x6755B86C)
+I (..\Core\My_Lib\my_lib.h)(0x6759BE98)
+I (..\Core\My_Lib\register_defs.h)(0x675D51F5)
+I (..\Core\My_Lib\gpio.h)(0x675AFEC4)
 I (..\Core\My_Lib\exti.h)(0x6755B9EE)
+I (..\Core\My_Lib\timer.h)(0x6759BE47)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6745D25A)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x675516CB)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6745D25B)
@@ -617,12 +620,13 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h)(0x6745D25B)
 F (..\Core\My_Lib\register_helpers.h)(0x6755B8AB)()
 F (..\Core\My_Lib\exti.c)(0x6755C244)(--c99 -c --cpu Cortex-M4.fp.sp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ..\Core\My_Lib-I.\RTE\_c-embed-imic-2024nov-IC:\Users\Huy\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\Huy\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o c-embed-imic-2024nov\exti.o --omf_browse c-embed-imic-2024nov\exti.crf --depend c-embed-imic-2024nov\exti.d)
 I (..\Core\My_Lib\exti.h)(0x6755B9EE)
-I (..\Core\My_Lib\my_lib.h)(0x6755B876)
+I (..\Core\My_Lib\my_lib.h)(0x6759BE98)
 I (..\Core\My_Lib\register_helpers.h)(0x6755B8AB)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC7840C)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5EC7840C)
-I (..\Core\My_Lib\register_defs.h)(0x6755C217)
-I (..\Core\My_Lib\gpio.h)(0x6755B86C)
+I (..\Core\My_Lib\register_defs.h)(0x675D51F5)
+I (..\Core\My_Lib\gpio.h)(0x675AFEC4)
+I (..\Core\My_Lib\timer.h)(0x6759BE47)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6745D25A)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x675516CB)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6745D25B)
@@ -650,3 +654,39 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h)(0x6745D25A
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h)(0x6745D25A)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h)(0x6745D25B)
 F (..\Core\My_Lib\exti.h)(0x6755B9EE)()
+F (..\Core\My_Lib\timer.c)(0x67601633)(--c99 -c --cpu Cortex-M4.fp.sp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ..\Core\My_Lib-I.\RTE\_c-embed-imic-2024nov-IC:\Users\Huy\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\Huy\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="531" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o c-embed-imic-2024nov\timer.o --omf_browse c-embed-imic-2024nov\timer.crf --depend c-embed-imic-2024nov\timer.d)
+I (..\Core\My_Lib\timer.h)(0x6759BE47)
+I (..\Core\My_Lib\my_lib.h)(0x6759BE98)
+I (..\Core\My_Lib\register_helpers.h)(0x6755B8AB)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC7840C)
+I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5EC7840C)
+I (..\Core\My_Lib\register_defs.h)(0x675D51F5)
+I (..\Core\My_Lib\gpio.h)(0x675AFEC4)
+I (..\Core\My_Lib\exti.h)(0x6755B9EE)
+I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6745D25A)
+I (../Core/Inc/stm32f4xx_hal_conf.h)(0x675516CB)
+I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6745D25B)
+I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h)(0x6745D25A)
+I (../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h)(0x6745D25A)
+I (../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h)(0x6745D25A)
+I (../Drivers/CMSIS/Include/core_cm4.h)(0x6745D0EC)
+I (../Drivers/CMSIS/Include/cmsis_version.h)(0x6745D0EC)
+I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x6745D0EC)
+I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x6745D0EC)
+I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x6745D0EC)
+I (../Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h)(0x6745D25A)
+I (../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x6745D25A)
+I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5EC7840C)
+I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h)(0x6745D25B)
+I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h)(0x6745D25A)
+I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h)(0x6745D25A)
+I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_exti.h)(0x6745D25A)
+I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h)(0x6745D25A)
+I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h)(0x6745D25A)
+I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h)(0x6745D25A)
+I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h)(0x6745D25A)
+I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h)(0x6745D25A)
+I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h)(0x6745D25A)
+I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h)(0x6745D25A)
+I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h)(0x6745D25B)
+F (..\Core\My_Lib\timer.h)(0x6759BE47)()

@@ -22,6 +22,7 @@
 "c-embed-imic-2024nov\gpio.o"
 "c-embed-imic-2024nov\register_helpers.o"
 "c-embed-imic-2024nov\exti.o"
+"c-embed-imic-2024nov\timer.o"
 --strict --scatter "c-embed-imic-2024nov\c-embed-imic-2024nov.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

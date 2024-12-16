@@ -8,6 +8,7 @@ c-embed-imic-2024nov\exti.o: ..\Core\My_Lib\my_lib.h
 c-embed-imic-2024nov\exti.o: ..\Core\My_Lib\register_defs.h
 c-embed-imic-2024nov\exti.o: ..\Core\My_Lib\gpio.h
 c-embed-imic-2024nov\exti.o: ..\Core\My_Lib\exti.h
+c-embed-imic-2024nov\exti.o: ..\Core\My_Lib\timer.h
 c-embed-imic-2024nov\exti.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h
 c-embed-imic-2024nov\exti.o: ../Core/Inc/stm32f4xx_hal_conf.h
 c-embed-imic-2024nov\exti.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h

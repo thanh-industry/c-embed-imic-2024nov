@@ -189,6 +189,10 @@
 
 //----------------------------------Register of TIM6 TIM7 Offset----------------------------------//
 
+/** 
+  * The peripheral registers have to be written by half-words (16 bits) or words (32 bits). Read 
+  * accesses can be done by bytes (8 bits), half-words (16 bits) or words (32 bits)
+*/
 /**
   * TIM 6,7 control register 1
   * Bit 15:8 reserved

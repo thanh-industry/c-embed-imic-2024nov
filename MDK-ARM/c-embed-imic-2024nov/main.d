@@ -35,3 +35,4 @@ c-embed-imic-2024nov\main.o: ..\Core\My_Lib\my_lib.h
 c-embed-imic-2024nov\main.o: ..\Core\My_Lib\register_defs.h
 c-embed-imic-2024nov\main.o: ..\Core\My_Lib\gpio.h
 c-embed-imic-2024nov\main.o: ..\Core\My_Lib\exti.h
+c-embed-imic-2024nov\main.o: ..\Core\My_Lib\timer.h

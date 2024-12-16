@@ -51,31 +51,53 @@ void gpio_init(){
   * @retval None
   */
 void gpio_write(uint32_t pin, uint32_t value){
+  // check the pin
+//  if (pin > 0x1111) return;
+
+  // write value ODR register
 	switch(value){
-	case 0:
-		bit_clear(GPIO_D_ODR, pin);
-		break;
-	case 1:
-		bit_set(GPIO_D_ODR, pin);
-		break;
-	default:
-		break;
+    case GPIO_OFF:
+      bit_clear(GPIO_D_ODR, (1<<pin));
+      break;
+    case GPIO_ON:
+      bit_set(GPIO_D_ODR, (1<<pin));
+      break;
+    default:
+      break;
 	}
 }
 
+uint8_t gpio_is_pin(uint32_t pin){
+	return (pin < GPIO_NUMBER) ? 1 : 0;
+}
+
 /**
-  * @brief This function provides toggle gpio
+  * @brief This function provides toggle the pin of GPIOx (x = 1:16)
   * @note this function only use for port D
-  * @param pin specifies the pin of GPIOx (x = 1:16)
+  * @param pin specifies the pin of GPIOx 
   * @retval None
   */
 void gpio_toggle(uint32_t pin){
+  // check the pin
+  if(!gpio_is_pin(pin)) return;
+
 	uint32_t reg = register_read(GPIO_D_ODR);
-	reg ~= (1 << pin);
+	reg ^= (1<<pin);
+	register_write(GPIO_D_ODR, reg);
 }
 
-
+/**
+  * @brief This function provides function read value at GPIOx (x = 1:16)
+  * @note this function only use for port D
+  * @param pin specifies the pin of GPIOx 
+  * @retval value at GPIOx 
+  */
 uint32_t gpio_read(uint32_t pin){
+  // check the pin
+	//  if (pin > 0x1111) return 0;
+
+  // read value from IDR register
 	uint32_t data = register_read(GPIO_A_IDR);
-	return data &= pin;
+
+	return data &= (1<<pin);
 }

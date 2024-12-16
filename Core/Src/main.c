@@ -55,11 +55,16 @@ static void MX_GPIO_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 volatile uint32_t btn = 0;
-uint32_t flag_exti = 0;
+uint16_t tick = 0;
+volatile uint32_t flag_exti = 0;
 void EXTI0_IRQHandler()
 {
   flag_exti = 1;
   bit_set(EXTI_PR, BIT_0);
+}
+
+void TIM6_DAC_IRQHandler(){
+	
 }
 /* USER CODE END 0 */
 
@@ -95,6 +100,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   gpio_init();
   exti_init();
+	timer_basic_6_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -104,18 +110,17 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+//		btn = gpio_read(GPIO_0);
+//		gpio_toggle(GPIO_13);
+//		HAL_Delay(500);
     if (flag_exti == 1)
     {
       flag_exti = 0;
-      gpio_write(BIT_13, GPIO_ON);
+      gpio_write(GPIO_13, GPIO_ON);
       HAL_Delay(500);
-      gpio_write(BIT_13, GPIO_OFF);
+      gpio_write(GPIO_13, GPIO_OFF);
       HAL_Delay(500);
     }
-    gpio_write(BIT_12, GPIO_ON);
-    HAL_Delay(500);
-    gpio_write(BIT_12, GPIO_OFF);
-    HAL_Delay(500);
   }
   /* USER CODE END 3 */
 }
