@@ -7,11 +7,20 @@
 #include "register_defs.h"
 #include "gpio.h"
 #include "exti.h"
+#include "basic_timer.h"
 
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 void EXTI0_IRQHandler(void);
+void REG_TIM6_DAC_IRQHandler(void);
+void REG_TIM7_IRQHandler(void);
+
 static bool alarm_PA0 = false;
+static bool alarm_TIM6 = false;
+static bool alarm_TIM7 = false;
+static bool exti_led = false;
+static bool tim6_led = false;
+static bool tim7_led = false;
 
 void set_led(uint32_t *address,uint32_t mask,bool state){
 	if(state){
@@ -36,12 +45,18 @@ int main(void)
   MX_GPIO_Init();
 	REG_GPIO_Init();
 	EXTI_Init();
+	REG_TIMER_Init();
 	HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
   NVIC_EnableIRQ(EXTI0_IRQn);
 	//set_bits(&NVIC->ISER[0], (1 << EXTI0_IRQn));
+	NVIC_EnableIRQ(TIM6_DAC_IRQn);
+	NVIC_EnableIRQ(TIM7_IRQn);
   uint32_t *blinking_led_add = REG_GPIOD_ODR;
 	uint32_t blinking_led_mask = BIT_12|BIT_13|BIT_14|BIT_15;
-	uint32_t blinking_led_mas = BIT_12;
+	uint32_t blinking_led_mas1 = BIT_12;
+	uint32_t blinking_led_mas2 = BIT_13;
+	uint32_t blinking_led_mas3 = BIT_14;
+	
 	//int count=0;
   while (1)
   {
@@ -52,7 +67,17 @@ int main(void)
 		}
 		else{
 			alarm_PA0=false;
-			blink_led(blinking_led_add,blinking_led_mas);
+			blink_led(blinking_led_add,blinking_led_mas1);
+			while (1) {
+         if(alarm_TIM6) {
+            alarm_TIM6 = false;
+            set_led(blinking_led_add, blinking_led_mas2, !check_bits(blinking_led_add, BIT_13));
+         }
+         if (alarm_TIM7) {
+            alarm_TIM7 = false;
+            set_led(blinking_led_add, blinking_led_mas3, !check_bits(blinking_led_add, BIT_14));
+         }
+      }
 		}
   }
 }
@@ -63,7 +88,27 @@ void EXTI0_IRQHandler(void) {
 		alarm_PA0 = true;
 	}
 }
+// Function for NVIC TIM6 Interrupt
+void TIM6_DAC_IRQHandler(void) {
+	// Check update interrupt flag
+    if (check_bits(REG_TIM6_SR, BIT_0)) {
+    	// Clear update interrupt flag
+        clear_bits(REG_TIM6_SR, BIT_0);
+        // Set Alarm of TIM 6
+        alarm_TIM6 = true;
+    }
+}
 
+// Function for NVIC TIM7 Interrupt
+void TIM7_IRQHandler(void) {
+	// Check update interrupt flag
+	if (check_bits(REG_TIM7_SR, BIT_0)) {
+		// Clear update interrupt flag
+		clear_bits(REG_TIM7_SR, BIT_0);
+		// Set Alarm of TIM 7
+		alarm_TIM7 = true;
+	}
+}
 void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};

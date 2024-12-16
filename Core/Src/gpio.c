@@ -12,6 +12,12 @@ void REG_GPIO_Init(void){
 																									//
 	clear_bits(REG_GPIOA_MODER,BIT_0|BIT_1);        //Cau hinh GPIO Chan PA0 Input mode
 	clear_bits(REG_GPIOA_PUPDR, (BIT_0 | BIT_1));   //Khong kich hoat pull up hay pull down
+	
+	set_bits(REG_GPIOD_MODER,BIT_24|BIT_26|BIT_28|BIT_30);
+	clear_bits(REG_GPIOD_MODER,BIT_25|BIT_27|BIT_29|BIT_31);
+	clear_bits(REG_GPIOD_OTYPER,BIT_12|BIT_13|BIT_14|BIT_15);
+	clear_bits(REG_GPIOD_PUPDR,BIT_24|BIT_25|BIT_26|BIT_27|BIT_28|BIT_29|BIT_30|BIT_31);
+	clear_bits(REG_GPIOD_OSPEEDR,BIT_24|BIT_25|BIT_26|BIT_27|BIT_28|BIT_29|BIT_30|BIT_31);
 }
 
 

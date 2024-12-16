@@ -29,4 +29,4 @@ sura/main.o: ..\Core\Src\main.c ..\Core\Inc\main.h \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdio.h \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdbool.h \
   ..\Core\Inc\register_helper.h ..\Core\Inc\register_defs.h \
-  ..\Core\Inc\gpio.h ..\Core\Inc\exti.h
+  ..\Core\Inc\gpio.h ..\Core\Inc\exti.h ..\Core\Inc\basic_timer.h

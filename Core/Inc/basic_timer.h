@@ -1,0 +1,1 @@
+void REG_TIMER_Init(void);

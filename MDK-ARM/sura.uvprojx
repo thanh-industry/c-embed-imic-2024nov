@@ -444,6 +444,16 @@
               <FileType>5</FileType>
               <FilePath>..\Core\Inc\gpio.h</FilePath>
             </File>
+            <File>
+              <FileName>basic_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\basic_timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>basic_timer.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Core\Inc\basic_timer.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

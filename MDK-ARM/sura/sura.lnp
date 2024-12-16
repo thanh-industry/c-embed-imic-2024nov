@@ -6,6 +6,7 @@
 "sura\registers_helper.o"
 "sura\gpio.o"
 "sura\exti.o"
+"sura\basic_timer.o"
 "sura\stm32f4xx_hal_tim.o"
 "sura\stm32f4xx_hal_tim_ex.o"
 "sura\stm32f4xx_hal_rcc.o"
