@@ -111,20 +111,39 @@
 #define REG_TIM7_BASE				0x40001400													// Register base address of basic timer TIM7
 /*----BASIC TIMER----*/
 
+/*----ADVANCED TIMER----*/
+#define REG_TIM1_BASE				0x40010000													// Register base address of advanced timer TIM1
+#define REG_TIM8_BASE				0x40010400													// Register base address of advanced timer TIM8
+/*----ADVANCED TIMER----*/
+
 /*--------------------BASE--------------------*/
 
 
 
 /*--------------------OFFSET--------------------*/
 
-/*----BASIC TIMER----*/
-#define REG_TIM_BSC_CR1_OFFSET		0x00														// TIM6, TIM7 control register 1
-#define REG_TIM_BSC_DIER_OFFSET		0x0C														// TIM6, TIM7 DMA/Interrupt enable register
-#define REG_TIM_BSC_SR_OFFSET		0x10														// TIM6, TIM7 status register
-#define REG_TIM_BSC_CNT_OFFSET		0x24														// TIM6, TIM7 counter register
-#define REG_TIM_BSC_PSC_OFFSET		0x28														// TIM6, TIM7 pre-scaler register
-#define REG_TIM_BSC_ARR_OFFSET		0x2C														// TIM6, TIM7 auto-reload register
-/*----BASIC TIMER----*/
+/*----TIMER----*/
+#define REG_TIM_CR1_OFFSET			0x00														// Control register 1
+#define REG_TIM_CR2_OFFSET			0x04														// Control register 2
+#define REG_TIM_SMCR_OFFSET			0x08														// Slave mode control register (TIM1, TIM8)
+#define REG_TIM_DIER_OFFSET			0x0C														// DMA/Interrupt enable register
+#define REG_TIM_SR_OFFSET			0x10														// Status register
+#define REG_TIM_EGR_OFFSET			0x14														// Event generation register
+#define REG_TIM_CCMR1_OFFSET		0x18														// Capture/Compare mode register 1 (TIM1, TIM8)
+#define REG_TIM_CCMR2_OFFSET		0x1C														// Capture/Compare mode register 2 (TIM1, TIM8)
+#define REG_TIM_CCER_OFFSET			0x20														// Capture/Compare enable register (TIM1, TIM8)
+#define REG_TIM_CNT_OFFSET			0x24														// Counter register
+#define REG_TIM_PSC_OFFSET			0x28														// Pre-scaler register
+#define REG_TIM_ARR_OFFSET			0x2C														// Auto-reload register
+#define REG_TIM_RCR_OFFSET			0x30														// Repetition counter register
+#define REG_TIM_CCR1_OFFSET			0x34														// Capture/Compare register 1 (TIM1, TIM8)
+#define REG_TIM_CCR2_OFFSET			0x38														// Capture/Compare register 2 (TIM1, TIM8)
+#define REG_TIM_CCR3_OFFSET			0x3C														// Capture/Compare register 3 (TIM1, TIM8)
+#define REG_TIM_CCR4_OFFSET			0x40														// Capture/Compare register 4 (TIM1, TIM8)
+#define REG_TIM_BDTR_OFFSET			0x44														// Break and dead-time register (TIM1, TIM8)
+#define REG_TIM_DCR_OFFSET			0x48														// DMA control register (TIM1, TIM8)
+#define REG_TIM_DMAR_OFFSET			0x4C														// DMA address for full transfer (TIM1, TIM8)
+/*----TIMER----*/
 
 /*--------------------OFFSET--------------------*/
 
@@ -135,25 +154,52 @@
 /*------BASIC TIMER------*/
 
 /*---TIM 6---*/
-#define REG_TIM6_CR1				((uint32_t *)(REG_TIM6_BASE + REG_TIM_BSC_CR1_OFFSET))
-#define REG_TIM6_DIER				((uint32_t *)(REG_TIM6_BASE + REG_TIM_BSC_DIER_OFFSET))
-#define REG_TIM6_SR					((uint32_t *)(REG_TIM6_BASE + REG_TIM_BSC_SR_OFFSET))
-#define REG_TIM6_CNT				((uint32_t *)(REG_TIM6_BASE + REG_TIM_BSC_CNT_OFFSET))
-#define REG_TIM6_PSC				((uint32_t *)(REG_TIM6_BASE + REG_TIM_BSC_PSC_OFFSET))
-#define REG_TIM6_ARR				((uint32_t *)(REG_TIM6_BASE + REG_TIM_BSC_ARR_OFFSET))
+#define REG_TIM6_CR1				((uint32_t *)(REG_TIM6_BASE + REG_TIM_CR1_OFFSET))
+#define REG_TIM6_DIER				((uint32_t *)(REG_TIM6_BASE + REG_TIM_DIER_OFFSET))
+#define REG_TIM6_SR					((uint32_t *)(REG_TIM6_BASE + REG_TIM_SR_OFFSET))
+#define REG_TIM6_CNT				((uint32_t *)(REG_TIM6_BASE + REG_TIM_CNT_OFFSET))
+#define REG_TIM6_PSC				((uint32_t *)(REG_TIM6_BASE + REG_TIM_PSC_OFFSET))
+#define REG_TIM6_ARR				((uint32_t *)(REG_TIM6_BASE + REG_TIM_ARR_OFFSET))
 /*---TIM 6---*/
 
 
 
 /*---TIM 7---*/
-#define REG_TIM7_CR1				((uint32_t *)(REG_TIM7_BASE + REG_TIM_BSC_CR1_OFFSET))
-#define REG_TIM7_DIER				((uint32_t *)(REG_TIM7_BASE + REG_TIM_BSC_DIER_OFFSET))
-#define REG_TIM7_SR					((uint32_t *)(REG_TIM7_BASE + REG_TIM_BSC_SR_OFFSET))
-#define REG_TIM7_CNT				((uint32_t *)(REG_TIM7_BASE + REG_TIM_BSC_CNT_OFFSET))
-#define REG_TIM7_PSC				((uint32_t *)(REG_TIM7_BASE + REG_TIM_BSC_PSC_OFFSET))
-#define REG_TIM7_ARR				((uint32_t *)(REG_TIM7_BASE + REG_TIM_BSC_ARR_OFFSET))
+#define REG_TIM7_CR1				((uint32_t *)(REG_TIM7_BASE + REG_TIM_CR1_OFFSET))
+#define REG_TIM7_DIER				((uint32_t *)(REG_TIM7_BASE + REG_TIM_DIER_OFFSET))
+#define REG_TIM7_SR					((uint32_t *)(REG_TIM7_BASE + REG_TIM_SR_OFFSET))
+#define REG_TIM7_CNT				((uint32_t *)(REG_TIM7_BASE + REG_TIM_CNT_OFFSET))
+#define REG_TIM7_PSC				((uint32_t *)(REG_TIM7_BASE + REG_TIM_PSC_OFFSET))
+#define REG_TIM7_ARR				((uint32_t *)(REG_TIM7_BASE + REG_TIM_ARR_OFFSET))
 /*---TIM 7---*/
 /*------BASIC TIMER------*/
+
+
+
+/*----ADVANCED TIMER----*/
+/*---TIM 1---*/
+#define REG_TIM1_CR1				((uint32_t *)(REG_TIM1_BASE + REG_TIM_CR1_OFFSET))
+#define REG_TIM1_CR2				((uint32_t *)(REG_TIM1_BASE + REG_TIM_CR2_OFFSET))
+#define REG_TIM1_SMCR				((uint32_t *)(REG_TIM1_BASE + REG_TIM_SMCR_OFFSET))
+#define REG_TIM1_DIER				((uint32_t *)(REG_TIM1_BASE + REG_TIM_DIER_OFFSET))
+#define REG_TIM1_SR					((uint32_t *)(REG_TIM1_BASE + REG_TIM_SR_OFFSET))
+#define REG_TIM1_EGR				((uint32_t *)(REG_TIM1_BASE + REG_TIM_EGR_OFFSET))
+#define REG_TIM1_CCMR1				((uint32_t *)(REG_TIM1_BASE + REG_TIM_CCMR1_OFFSET))
+#define REG_TIM1_CCMR2				((uint32_t *)(REG_TIM1_BASE + REG_TIM_CCMR2_OFFSET))
+#define REG_TIM1_CCER				((uint32_t *)(REG_TIM1_BASE + REG_TIM_CCER_OFFSET))
+#define REG_TIM1_CNT				((uint32_t *)(REG_TIM1_BASE + REG_TIM_CNT_OFFSET))
+#define REG_TIM1_PSC				((uint32_t *)(REG_TIM1_BASE + REG_TIM_PSC_OFFSET))
+#define REG_TIM1_ARR				((uint32_t *)(REG_TIM1_BASE + REG_TIM_ARR_OFFSET))
+#define REG_TIM1_RCR				((uint32_t *)(REG_TIM1_BASE + REG_TIM_RCR_OFFSET))
+#define REG_TIM1_CCR1				((uint32_t *)(REG_TIM1_BASE + REG_TIM_CCR1_OFFSET))
+#define REG_TIM1_CCR2				((uint32_t *)(REG_TIM1_BASE + REG_TIM_CCR2_OFFSET))
+#define REG_TIM1_CCR3				((uint32_t *)(REG_TIM1_BASE + REG_TIM_CCR3_OFFSET))
+#define REG_TIM1_CCR4				((uint32_t *)(REG_TIM1_BASE + REG_TIM_CCR4_OFFSET))
+#define REG_TIM1_BDTR				((uint32_t *)(REG_TIM1_BASE + REG_TIM_BDTR_OFFSET))
+#define REG_TIM1_DCR				((uint32_t *)(REG_TIM1_BASE + REG_TIM_DCR_OFFSET))
+#define REG_TIM1_DMAR				((uint32_t *)(REG_TIM1_BASE + REG_TIM_DMAR_OFFSET))
+/*---TIM 1---*/
+/*----ADVANCED TIMER----*/
 
 /*--------------------FINAL--------------------*/
 /*-----------------------------------------TIMER REG-----------------------------------------*/
