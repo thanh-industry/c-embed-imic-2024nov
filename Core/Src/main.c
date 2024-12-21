@@ -60,6 +60,8 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
 void EXTI0_IRQHandler(void);
+void TIM6_DAC_IRQHandler(void);
+void TIM7_IRQHandler(void);
 void interferenceCheck(void);
 /* USER CODE END PFP */
 
@@ -99,9 +101,13 @@ int main(void)
   // Enable NVIC for EXTI Group 0
   NVIC_EnableIRQ(EXTI0_IRQn);
 
-  // Enable NVIC for Timer and 7
+  // Enable NVIC for Timer 6 and 7
   NVIC_EnableIRQ(TIM6_DAC_IRQn);
   NVIC_EnableIRQ(TIM7_IRQn);
+  // Enable NVIC for Update interrupt in Timer 1
+  NVIC_EnableIRQ(TIM1_UP_TIM10_IRQn);
+  // Enable NVIC for Capture/Compare interrupt in Timer 1
+  NVIC_EnableIRQ(TIM1_CC_IRQn);
 
   /* USER CODE END SysInit */
 
@@ -277,6 +283,22 @@ void TIM7_IRQHandler(void) {
 		registerBitClear(REG_TIM7_SR, BIT_0);
 		// Set Alarm of TIM 7
 		timer7Alarm = true;
+	}
+}
+
+void TIM1_CC_IRQHandler(void) {
+	if (registerBitCheck(REG_TIM1_SR, BIT_1)) {
+		// Clear update interrupt flag
+		registerBitClear(REG_TIM1_SR, BIT_1);
+		// Set Alarm for update interrupt of TIM 1(if any)
+	}
+}
+
+void TIM1_UP_TIM10_IRQHandler(void) {
+	if (registerBitCheck(REG_TIM1_SR, BIT_0)) {
+		// Clear update interrupt flag
+		registerBitClear(REG_TIM1_SR, BIT_0);
+		// Set Alarm for compare interrupt of TIM 1(if any)
 	}
 }
 /* USER CODE END 4 */

@@ -27,6 +27,8 @@ void gpioRegisterSetup(void) {
 
 	/* END registers set up USER BUTTON PIN 0  in PORT A */
 
+
+
 	/* START registers set up PIN 1 in PORT A */
 
 	// For MODER, set mode 01 (General purpose output mode)
@@ -43,6 +45,20 @@ void gpioRegisterSetup(void) {
 	registerBitClear(REG_GPIO_A_PUPDR, (BIT_2 | BIT_3));
 
 	/* END registers set up PIN 1  in PORT A */
+
+
+
+	/* START registers set up TIMER1 PIN PA8 in PORT A */
+
+	// For MODER, set mode 10 (Alternate function mode)
+	registerBitClear(REG_GPIO_A_MODER, (BIT_16 | BIT_17));
+	registerBitSet(REG_GPIO_A_MODER, BIT_17);
+
+	// For AFRH, set mode AF1 (TIM1_CH1) for AFRH8 of PIN PA8
+	registerBitSet(REG_GPIO_A_AFRH, BIT_0);
+	/* END registers set up TIMER1 PIN PA8 in PORT A */
+
+
 
 	/* START registers set up PIN 12, 13, 14, 15 in PORT D */
 
