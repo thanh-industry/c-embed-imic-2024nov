@@ -23,6 +23,8 @@
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdint.h>
+#include <stdarg.h>
 #include "user_main_init.h"
 #include "registers_tools.h"
 #include "registers_defs.h"
@@ -45,6 +47,7 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+UART_HandleTypeDef huart4;
 
 /* USER CODE BEGIN PV */
 static bool extiAlarmPA0 = false;
@@ -53,13 +56,21 @@ static bool timer6Alarm = false;
 static bool timer6LedToggle = false;
 static bool timer7Alarm = false;
 static bool timer7LedToggle = false;
+static bool timer8CaptureAlarm = false;
+
+volatile uint32_t lastCapture = 0;
+volatile uint32_t pulsePeriod = 0;
+volatile uint32_t pulseFrequency = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_UART4_Init(void);
 /* USER CODE BEGIN PFP */
 void EXTI0_IRQHandler(void);
+void TIM1_CC_IRQHandler(void);
+void TIM8_CC_IRQHandler(void);
 void TIM6_DAC_IRQHandler(void);
 void TIM7_IRQHandler(void);
 void interferenceCheck(void);
@@ -67,6 +78,12 @@ void interferenceCheck(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+#define PRINT_UART(f_, ...) 													   	   \
+			do {																   	   \
+				char _buffer[1024];													   \
+				snprintf(_buffer, sizeof(_buffer), (f_), ##__VA_ARGS__); 			   \
+				HAL_UART_Transmit(&huart4, (uint8_t *)_buffer, strlen(_buffer), 1000); \
+			} while (0)
 
 /* USER CODE END 0 */
 
@@ -104,15 +121,23 @@ int main(void)
   // Enable NVIC for Timer 6 and 7
   NVIC_EnableIRQ(TIM6_DAC_IRQn);
   NVIC_EnableIRQ(TIM7_IRQn);
+
+  /*
   // Enable NVIC for Update interrupt in Timer 1
   NVIC_EnableIRQ(TIM1_UP_TIM10_IRQn);
+  */
+
   // Enable NVIC for Capture/Compare interrupt in Timer 1
   NVIC_EnableIRQ(TIM1_CC_IRQn);
+
+  // Enable NVIC for Capture/Compare interrupt in Timer 8
+  NVIC_EnableIRQ(TIM8_CC_IRQn);
 
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
-  //MX_GPIO_Init();
+  MX_GPIO_Init();
+  MX_UART4_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -127,6 +152,12 @@ int main(void)
 
 	  if(extiAlarmPA0) {
 		  interferenceCheck();
+	  }
+
+	  if(timer8CaptureAlarm) {
+		  pulseFrequency = 1000000 / pulsePeriod; // pulsePeriod is us, need to change to s
+		  PRINT_UART("The period and frequency of Timer 1 Pulse is : %d and %d", pulsePeriod, pulseFrequency);
+		  timer8CaptureAlarm = false;
 	  }
 
 	  if (extiButtonToggle) {
@@ -197,6 +228,39 @@ void SystemClock_Config(void)
 }
 
 /**
+  * @brief UART4 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_UART4_Init(void)
+{
+
+  /* USER CODE BEGIN UART4_Init 0 */
+
+  /* USER CODE END UART4_Init 0 */
+
+  /* USER CODE BEGIN UART4_Init 1 */
+
+  /* USER CODE END UART4_Init 1 */
+  huart4.Instance = UART4;
+  huart4.Init.BaudRate = 115200;
+  huart4.Init.WordLength = UART_WORDLENGTH_8B;
+  huart4.Init.StopBits = UART_STOPBITS_1;
+  huart4.Init.Parity = UART_PARITY_NONE;
+  huart4.Init.Mode = UART_MODE_TX_RX;
+  huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart4.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN UART4_Init 2 */
+
+  /* USER CODE END UART4_Init 2 */
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -211,6 +275,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, Green_LED_Pin|Orange_LED_Pin|Red_LED_Pin|Blue_LED_Pin, GPIO_PIN_RESET);
@@ -264,6 +329,30 @@ void EXTI0_IRQHandler(void) {
 	}
 }
 
+// Function for NVIC TIM1 Capture/Compare Interrupt
+void TIM1_CC_IRQHandler(void) {
+
+}
+
+// Function for NVIC TIM8 Capture/Compare Interrupt
+void TIM8_CC_IRQHandler(void) {
+	if (registerBitCheck(REG_TIM8_SR, BIT_1)) {
+		uint32_t currentCapture = registerRead(REG_TIM8_CCMR1);
+		if (currentCapture >= lastCapture) {
+			pulsePeriod = currentCapture - lastCapture;
+		}
+		else {
+			// This is for the case which the lastCapture is before overflow and currentCapture is after overflow
+			pulsePeriod = 0xFFFF - lastCapture + currentCapture +1;
+		}
+		// Clear capture interrupt flag
+		registerBitClear(REG_TIM8_SR, BIT_1);
+
+		// Set Alarm of TIM 8
+		timer8CaptureAlarm = true;
+	}
+}
+
 // Function for NVIC TIM6 Interrupt
 void TIM6_DAC_IRQHandler(void) {
 	// Check update interrupt flag
@@ -286,21 +375,6 @@ void TIM7_IRQHandler(void) {
 	}
 }
 
-void TIM1_CC_IRQHandler(void) {
-	if (registerBitCheck(REG_TIM1_SR, BIT_1)) {
-		// Clear update interrupt flag
-		registerBitClear(REG_TIM1_SR, BIT_1);
-		// Set Alarm for update interrupt of TIM 1(if any)
-	}
-}
-
-void TIM1_UP_TIM10_IRQHandler(void) {
-	if (registerBitCheck(REG_TIM1_SR, BIT_0)) {
-		// Clear update interrupt flag
-		registerBitClear(REG_TIM1_SR, BIT_0);
-		// Set Alarm for compare interrupt of TIM 1(if any)
-	}
-}
 /* USER CODE END 4 */
 
 /**
