@@ -42,6 +42,8 @@ void timersRegisterSetup(void) {
 	/*--------------------BASIC TIMER SET UP--------------------*/
 	/*----------TIM 6 SET UP----------*/
 	registerBitClear(REG_TIM6_CR1, BIT_0);						// Disable counter before setting the parameter
+
+
 	registerBitSet(REG_TIM6_CR1, (BIT_7 | BIT_2));				// Active Pre-load, update source: only counter
 	registerBitSet(REG_TIM6_DIER, BIT_0);						// Enable update interrupt
 
@@ -77,10 +79,10 @@ void timersRegisterSetup(void) {
 
 
 	/*--------------------ADVANCED TIMER SET UP--------------------*/
-	/*----------TIM 1 SET UP----------*/
-	registerBitClear(REG_TIM1_CR1, BIT_0);						// Disable counter before setting the parameter
-	registerBitSet(REG_TIM7_CR1, (BIT_7 | BIT_2));				// Active Pre-load, update source: only counter
 
+	/*----------TIM 1 SET UP----------*/
+	registerBitClear(REG_TIM1_CR1, BIT_0);						// Disable counter before setting any parameter
+	registerBitSet(REG_TIM1_CR1, (BIT_7 | BIT_2));				// Active Pre-load, update source: only counter
 
 	// Setting for PSC and ARR to make 1KHz (1ms) timer
 	uint32_t timer1_PSC = 0x7;									// HEX value of 7 DEC
@@ -119,18 +121,44 @@ void timersRegisterSetup(void) {
 	registerBitClear(REG_TIM1_CCMR1, (BIT_4 | BIT_5 | BIT_6));	// Clear OC1M bit (Output compare 1 mode)
 	registerBitSet(REG_TIM1_CCMR1, (BIT_4 | BIT_5));			// Set the OC1M bit to 011 (toggle mode)
 	registerBitSet(REG_TIM1_CCMR1, BIT_3);						// Enable OC1PE (Output compare 1 preload) for ability to change CCR1 value on the fly
-	registerBitSet(REG_TIM1_CCER, BIT_0);						// Enable capture/compare
+	registerBitSet(REG_TIM1_CCER, BIT_0);						// Enable capture/compare (compare mode)
 
-
+	/*
 	// Enable interrupt for both Update Interrupt and Compare Interrupt
 	registerBitSet(REG_TIM1_DIER, BIT_0);						// Enable UIE bit for Update Interrupt every time counter reach ARR
 	registerBitSet(REG_TIM1_DIER, BIT_1);						// Enable CC1IE bit for Compare Interrupt every time counter match CCR1
+	*/
 
-	// Set up BDTR, TIM1 and TIM8 pin will remain inactive until BDTR is set up
+	// Set up BDTR, TIM1 and TIM8 output pin will remain inactive until BDTR is set up
 	registerBitSet(REG_TIM1_BDTR, BIT_15);						// Enable Main output function of TIM1 Pin (currently PA8)
-	registerBitSet(REG_TIM1_CR1, BIT_0);						// Enable counter
 
+
+	registerBitSet(REG_TIM1_CR1, BIT_0);						// Enable counter
 	/*----------TIM 1 SET UP----------*/
+
+
+
+	/*----------TIM 8 SET UP----------*/
+	registerBitClear(REG_TIM8_CR1, BIT_0);						// Disable counter before setting any parameter
+
+	// Setting for PSC and ARR to make 1KHz (1ms) timer
+	uint32_t timer8_PSC = 0x7;									// HEX value of 7 DEC
+
+	registerBitSet(REG_TIM8_PSC, timer1_PSC);					// Add new value to PSC register
+
+	// Setting for Channel 1 of PC6 (TIM8_CH1)
+	registerBitClear(REG_TIM8_CCMR1, (BIT_0 | BIT_1));			// Clear CC1S bit (Capture/Compare 2 selection)
+	registerBitSet(REG_TIM8_CCMR1, BIT_0);						// Set the CC1S bit to 01 (CC1 channel is configured as input, IC1 is mapped on TI1)
+	registerBitClear(REG_TIM8_CCER, BIT_1);						// Set the CC1P bit to 00 (non-inverted/rising edge for input mode)
+	registerBitSet(REG_TIM8_CCER, BIT_0);						// Set the CC1E bit to 01 (Capture mode)
+
+	// Enable interrupt for Capture Interrupt
+	registerBitSet(REG_TIM8_DIER, BIT_1);						// Enable CC1IE bit for Capture Interrupt every time CCR1 latch counter value (signal captured)
+
+
+	registerBitSet(REG_TIM8_CR1, BIT_0);						// Enable counter
+	/*----------TIM 8 SET UP----------*/
+
 	/*--------------------ADVANCED TIMER SET UP--------------------*/
 
 
