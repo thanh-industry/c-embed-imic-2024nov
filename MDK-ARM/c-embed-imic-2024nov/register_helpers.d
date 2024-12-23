@@ -9,6 +9,7 @@ c-embed-imic-2024nov\register_helpers.o: ..\Core\My_Lib\gpio.h
 c-embed-imic-2024nov\register_helpers.o: ..\Core\My_Lib\my_lib.h
 c-embed-imic-2024nov\register_helpers.o: ..\Core\My_Lib\exti.h
 c-embed-imic-2024nov\register_helpers.o: ..\Core\My_Lib\timer.h
+c-embed-imic-2024nov\register_helpers.o: ..\Core\My_Lib\led.h
 c-embed-imic-2024nov\register_helpers.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h
 c-embed-imic-2024nov\register_helpers.o: ../Core/Inc/stm32f4xx_hal_conf.h
 c-embed-imic-2024nov\register_helpers.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h
@@ -36,3 +37,6 @@ c-embed-imic-2024nov\register_helpers.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm
 c-embed-imic-2024nov\register_helpers.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
 c-embed-imic-2024nov\register_helpers.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 c-embed-imic-2024nov\register_helpers.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
+c-embed-imic-2024nov\register_helpers.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
+c-embed-imic-2024nov\register_helpers.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
+c-embed-imic-2024nov\register_helpers.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h

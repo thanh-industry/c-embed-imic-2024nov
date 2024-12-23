@@ -25,5 +25,7 @@ SUBDIRS := \
 Core/My_Lib \
 Core/Src \
 Core/Startup \
+Drivers/CMSIS \
 Drivers/STM32F4xx_HAL_Driver/Src \
+Drivers/STM32F4xx_HAL_Driver \
 

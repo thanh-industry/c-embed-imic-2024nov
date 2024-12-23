@@ -18,14 +18,7 @@
 #define GPIO_PORT_A_OFFSET 0x0U
 #define GPIO_PORT_D_OFFSET 0xC00U
 
-/**
-  * Each general-purpose I/O port has:
-  * four 32-bit configuration registers (GPIOx_MODER, GPIOx_OTYPER, GPIOx_OSPEEDR and GPIOx_PUPDR) 
-  * two 32-bit data registers (GPIOx_IDR and GPIOx_ODR)
-  * a 32-bit set/reset register (GPIOx_BSRR)
-  * a 32-bit locking register (GPIOx_LCKR)
-  * two 32-bit alternate function selection register (GPIOx_AFRH and GPIOx_AFRL)
-**/
+
 
 //----------------------------------AHB1 Peripheral----------------------------------//
 
@@ -138,7 +131,7 @@
   * Bit 31:23 reserved
   * Bit 22:0 MRx: interupt mask on line x
   *   0: Interrupt request from line x is masked
-  *   1: Interrupt request form line x is not masked
+  *   1: Interrupt request from line x is not masked
 **/
 #define EXTI_IMR_OFFSET 0x0U
 
@@ -147,7 +140,7 @@
   * Bit 31:23 reserved
   * Bit 22:0 MRx: interupt mask on line x
   *   0: Interrupt request from line x is masked
-  *   1: Interrupt request form line x is not masked
+  *   1: Interrupt request from line x is not masked
 **/
 #define EXTI_EMR_OFFSET 0x04U
 

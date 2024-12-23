@@ -1,4 +1,0 @@
-../Core/My_Lib/register_helpers.c:11:10:register_read	16	static
-../Core/My_Lib/register_helpers.c:18:6:register_write	16	static
-../Core/My_Lib/register_helpers.c:26:6:bit_set	24	static
-../Core/My_Lib/register_helpers.c:35:6:bit_clear	24	static
