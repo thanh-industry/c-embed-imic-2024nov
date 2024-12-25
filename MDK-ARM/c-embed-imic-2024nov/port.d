@@ -1,0 +1,12 @@
+c-embed-imic-2024nov\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/port.c
+c-embed-imic-2024nov\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+c-embed-imic-2024nov\port.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+c-embed-imic-2024nov\port.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+c-embed-imic-2024nov\port.o: ../Core/Inc/FreeRTOSConfig.h
+c-embed-imic-2024nov\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+c-embed-imic-2024nov\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+c-embed-imic-2024nov\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+c-embed-imic-2024nov\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+c-embed-imic-2024nov\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+c-embed-imic-2024nov\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+c-embed-imic-2024nov\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h

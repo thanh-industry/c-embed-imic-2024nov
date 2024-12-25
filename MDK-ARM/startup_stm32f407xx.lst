@@ -849,12 +849,12 @@ interwork --depend=c-embed-imic-2024nov\startup_stm32f407xx.d -oc-embed-imic-20
 ARM Macro Assembler    Page 14 
 
 
-24nov\startup_stm32f407xx.o -I.\RTE\_c-embed-imic-2024nov -IC:\Users\Huy\AppDat
-a\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include -IC:\Users\Huy\AppData\Loc
-al\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Includ
-e --predefine="__UVISION_VERSION SETA 531" --predefine="_RTE_ SETA 1" --predefi
-ne="STM32F407xx SETA 1" --predefine="_RTE_ SETA 1" --list=startup_stm32f407xx.l
-st startup_stm32f407xx.s
+24nov\startup_stm32f407xx.o -I../Core/Inc -I.\RTE\_c-embed-imic-2024nov -IC:\Us
+ers\Huy\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include -IC:\Users\H
+uy\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\ST
+M32F4xx\Include --predefine="__UVISION_VERSION SETA 531" --predefine="_RTE_ SET
+A 1" --predefine="STM32F407xx SETA 1" --predefine="_RTE_ SETA 1" --list=startup
+_stm32f407xx.lst startup_stm32f407xx.s
 
 
 

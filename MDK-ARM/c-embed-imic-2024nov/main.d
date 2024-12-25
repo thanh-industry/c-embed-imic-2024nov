@@ -31,6 +31,17 @@ c-embed-imic-2024nov\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_p
 c-embed-imic-2024nov\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 c-embed-imic-2024nov\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 c-embed-imic-2024nov\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
+c-embed-imic-2024nov\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h
+c-embed-imic-2024nov\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+c-embed-imic-2024nov\main.o: ../Core/Inc/FreeRTOSConfig.h
+c-embed-imic-2024nov\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+c-embed-imic-2024nov\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+c-embed-imic-2024nov\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+c-embed-imic-2024nov\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+c-embed-imic-2024nov\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+c-embed-imic-2024nov\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+c-embed-imic-2024nov\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+c-embed-imic-2024nov\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
 c-embed-imic-2024nov\main.o: ../Core/My_Lib/my_lib.h
 c-embed-imic-2024nov\main.o: ../Core/My_Lib/register_helpers.h
 c-embed-imic-2024nov\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
@@ -40,3 +51,4 @@ c-embed-imic-2024nov\main.o: ../Core/My_Lib/gpio.h
 c-embed-imic-2024nov\main.o: ../Core/My_Lib/exti.h
 c-embed-imic-2024nov\main.o: ../Core/My_Lib/timer.h
 c-embed-imic-2024nov\main.o: ../Core/My_Lib/led.h
+c-embed-imic-2024nov\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

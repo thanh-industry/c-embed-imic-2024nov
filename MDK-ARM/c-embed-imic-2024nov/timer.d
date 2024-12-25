@@ -40,3 +40,4 @@ c-embed-imic-2024nov\timer.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_
 c-embed-imic-2024nov\timer.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 c-embed-imic-2024nov\timer.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 c-embed-imic-2024nov\timer.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
+c-embed-imic-2024nov\timer.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

@@ -8,6 +8,7 @@
 #include "timer.h"
 #include "led.h"
 #include "stm32f4xx_hal.h"
-#include "stdio.h"
+#include "string.h"
+
 #endif /* _MY_LIB_H */
 

@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "cmsis_os.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -40,11 +41,38 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim9;
 
-UART_HandleTypeDef huart1;
+UART_HandleTypeDef huart4;
 
+/* Definitions for defaultTask */
+osThreadId_t defaultTaskHandle;
+const osThreadAttr_t defaultTask_attributes = {
+  .name = "defaultTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
+/* Definitions for myTask02 */
+osThreadId_t myTask02Handle;
+const osThreadAttr_t myTask02_attributes = {
+  .name = "myTask02",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityHigh,
+};
+/* Definitions for myTask03 */
+osThreadId_t myTask03Handle;
+const osThreadAttr_t myTask03_attributes = {
+  .name = "myTask03",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
+/* Definitions for myTask04 */
+osThreadId_t myTask04Handle;
+const osThreadAttr_t myTask04_attributes = {
+  .name = "myTask04",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -52,9 +80,13 @@ UART_HandleTypeDef huart1;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_TIM1_Init(void);
 static void MX_TIM9_Init(void);
-static void MX_USART1_UART_Init(void);
+static void MX_UART4_Init(void);
+void StartDefaultTask(void *argument);
+void StartTask02(void *argument);
+void StartTask03(void *argument);
+void StartTask04(void *argument);
+
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -62,17 +94,19 @@ static void MX_USART1_UART_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-//#define PRINT_UART(f_, ...)				\
-//	do{									\
-//		char _buffer[1024];
-//		snprintf(_buffer, sizeof(_buffer), (f_), ##__VA_ARGS__); \
-//		HAL_UART_Transmit(&huart1, (uint8_t *)_buffer, strlen(_buffer), 1000); \
-//	}while(0);
+#define PRINT_UART(f_, ...)                          \
+    do {                                            \
+        char _buffer[1024];                         \
+        snprintf(_buffer, sizeof(_buffer), f_, ##__VA_ARGS__); \
+        HAL_UART_Transmit(&huart4, (uint8_t *)_buffer, strlen(_buffer), 1000); \
+    } while (0);
 
 
 volatile uint32_t btn = 0;
 uint16_t tick = 0;
 volatile uint8_t flag_exti = 0;
+
+
 void exti_callback(){
 	flag_exti = 1;
 }
@@ -83,35 +117,6 @@ void TIM6_DAC_IRQHandler(void)
 	gpio_toggle(GPIO_12);
 }
 
-uint32_t ic_value_1 = 0, ic_value_2 = 0;
-uint32_t diff = 0;
-float value = 0;
-float refClock = 25000000 /(25000); // 1000
-void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
-//	if (htim->Instance == htim1.Instance){
-//		static uint8_t flag = 0;
-//		if (flag == 0){
-//			ic_value_1 = HAL_TIM_ReadCapturedValue(&htim1, TIM_CHANNEL_2);
-//			flag = 1;
-//		}
-//		else{
-//			ic_value_2 = HAL_TIM_ReadCapturedValue(&htim1, TIM_CHANNEL_2);
-//			if ( ic_value_2 > ic_value_1){
-//				diff = ic_value_2 - ic_value_1;
-//			}
-//			else{
-//				diff = (0xffff - ic_value_1) + ic_value_2;
-//			}
-//			value = refClock / diff;
-//			__HAL_TIM_SET_COUNTER(&htim1, 0);  // reset the counter
-//			HAL_TIM_IC_DeInit(&htim1);
-//			flag = 0;
-//		}
-//	}
-	ic_value_1 = __HAL_TIM_GET_COMPARE(&htim1,TIM_CHANNEL_2);
-	value = ic_value_1 - ic_value_2;
-	ic_value_2 = ic_value_1;
-}
 
 /* USER CODE END 0 */
 
@@ -143,17 +148,62 @@ int main(void)
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
-  //MX_GPIO_Init();
-  MX_TIM1_Init();
+  MX_GPIO_Init();
   MX_TIM9_Init();
-  //MX_USART1_UART_Init();
+  MX_UART4_Init();
   /* USER CODE BEGIN 2 */
-  gpio_init();
-  exti_init();
+//  gpio_init();
+//  exti_init();
   HAL_TIM_OC_Start(&htim9, TIM_CHANNEL_1);
 	//timer_basic_6_init();
-	HAL_TIM_IC_Start_IT(&htim1, TIM_CHANNEL_2);
+	//HAL_TIM_IC_Start_IT(&htim1, TIM_CHANNEL_2);
+	HAL_TIM_PWM_Start(&htim9, TIM_CHANNEL_2);
   /* USER CODE END 2 */
+
+  /* Init scheduler */
+  osKernelInitialize();
+
+  /* USER CODE BEGIN RTOS_MUTEX */
+  /* add mutexes, ... */
+  /* USER CODE END RTOS_MUTEX */
+
+  /* USER CODE BEGIN RTOS_SEMAPHORES */
+  /* add semaphores, ... */
+  /* USER CODE END RTOS_SEMAPHORES */
+
+  /* USER CODE BEGIN RTOS_TIMERS */
+  /* start timers, add new ones, ... */
+  /* USER CODE END RTOS_TIMERS */
+
+  /* USER CODE BEGIN RTOS_QUEUES */
+  /* add queues, ... */
+  /* USER CODE END RTOS_QUEUES */
+
+  /* Create the thread(s) */
+  /* creation of defaultTask */
+  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+
+  /* creation of myTask02 */
+  myTask02Handle = osThreadNew(StartTask02, NULL, &myTask02_attributes);
+
+  /* creation of myTask03 */
+  myTask03Handle = osThreadNew(StartTask03, NULL, &myTask03_attributes);
+
+  /* creation of myTask04 */
+  myTask04Handle = osThreadNew(StartTask04, NULL, &myTask04_attributes);
+
+  /* USER CODE BEGIN RTOS_THREADS */
+  /* add threads, ... */
+  /* USER CODE END RTOS_THREADS */
+
+  /* USER CODE BEGIN RTOS_EVENTS */
+  /* add events, ... */
+  /* USER CODE END RTOS_EVENTS */
+
+  /* Start scheduler */
+  osKernelStart();
+
+  /* We should never get here as control is now taken by the scheduler */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -162,12 +212,14 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
+		
+		// check flag exti
     if (flag_exti == 1)
     {
     	flag_exti = 0;
     	gpio_toggle(GPIO_13);
     }
+		
     led_blink(GPIO_15, 500);
   }
   /* USER CODE END 3 */
@@ -190,14 +242,13 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLM = 8;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLM = 4;
   RCC_OscInitStruct.PLL.PLLN = 50;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV4;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 7;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
@@ -209,7 +260,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV2;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
@@ -217,65 +268,6 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-}
-
-/**
-  * @brief TIM1 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_TIM1_Init(void)
-{
-
-  /* USER CODE BEGIN TIM1_Init 0 */
-
-  /* USER CODE END TIM1_Init 0 */
-
-  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
-  TIM_MasterConfigTypeDef sMasterConfig = {0};
-  TIM_IC_InitTypeDef sConfigIC = {0};
-
-  /* USER CODE BEGIN TIM1_Init 1 */
-
-  /* USER CODE END TIM1_Init 1 */
-  htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 24999;
-  htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = 65535;
-  htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim1.Init.RepetitionCounter = 0;
-  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
-  if (HAL_TIM_Base_Init(&htim1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  if (HAL_TIM_ConfigClockSource(&htim1, &sClockSourceConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_TIM_IC_Init(&htim1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
-  sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
-  sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
-  sConfigIC.ICFilter = 0;
-  if (HAL_TIM_IC_ConfigChannel(&htim1, &sConfigIC, TIM_CHANNEL_2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN TIM1_Init 2 */
-
-  /* USER CODE END TIM1_Init 2 */
-
 }
 
 /**
@@ -315,6 +307,10 @@ static void MX_TIM9_Init(void)
   {
     Error_Handler();
   }
+  if (HAL_TIM_PWM_Init(&htim9) != HAL_OK)
+  {
+    Error_Handler();
+  }
   sConfigOC.OCMode = TIM_OCMODE_TOGGLE;
   sConfigOC.Pulse = 499;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
@@ -324,6 +320,11 @@ static void MX_TIM9_Init(void)
     Error_Handler();
   }
   __HAL_TIM_ENABLE_OCxPRELOAD(&htim9, TIM_CHANNEL_1);
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+  if (HAL_TIM_PWM_ConfigChannel(&htim9, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
+  {
+    Error_Handler();
+  }
   /* USER CODE BEGIN TIM9_Init 2 */
 
   /* USER CODE END TIM9_Init 2 */
@@ -332,35 +333,35 @@ static void MX_TIM9_Init(void)
 }
 
 /**
-  * @brief USART1 Initialization Function
+  * @brief UART4 Initialization Function
   * @param None
   * @retval None
   */
-static void MX_USART1_UART_Init(void)
+static void MX_UART4_Init(void)
 {
 
-  /* USER CODE BEGIN USART1_Init 0 */
+  /* USER CODE BEGIN UART4_Init 0 */
 
-  /* USER CODE END USART1_Init 0 */
+  /* USER CODE END UART4_Init 0 */
 
-  /* USER CODE BEGIN USART1_Init 1 */
+  /* USER CODE BEGIN UART4_Init 1 */
 
-  /* USER CODE END USART1_Init 1 */
-  huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
-  huart1.Init.WordLength = UART_WORDLENGTH_8B;
-  huart1.Init.StopBits = UART_STOPBITS_1;
-  huart1.Init.Parity = UART_PARITY_NONE;
-  huart1.Init.Mode = UART_MODE_TX_RX;
-  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart1) != HAL_OK)
+  /* USER CODE END UART4_Init 1 */
+  huart4.Instance = UART4;
+  huart4.Init.BaudRate = 115200;
+  huart4.Init.WordLength = UART_WORDLENGTH_8B;
+  huart4.Init.StopBits = UART_STOPBITS_1;
+  huart4.Init.Parity = UART_PARITY_NONE;
+  huart4.Init.Mode = UART_MODE_TX_RX;
+  huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart4.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart4) != HAL_OK)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN USART1_Init 2 */
+  /* USER CODE BEGIN UART4_Init 2 */
 
-  /* USER CODE END USART1_Init 2 */
+  /* USER CODE END UART4_Init 2 */
 
 }
 
@@ -379,8 +380,14 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+
+  /*Configure GPIO pin : PE4 */
+  GPIO_InitStruct.Pin = GPIO_PIN_4;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
   /*Configure GPIO pin : CLK_IN_Pin */
   GPIO_InitStruct.Pin = CLK_IN_Pin;
@@ -397,6 +404,102 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 
 /* USER CODE END 4 */
+
+/* USER CODE BEGIN Header_StartDefaultTask */
+/**
+  * @brief  Function implementing the defaultTask thread.
+  * @param  argument: Not used
+  * @retval None
+  */
+/* USER CODE END Header_StartDefaultTask */
+void StartDefaultTask(void *argument)
+{
+  /* USER CODE BEGIN 5 */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END 5 */
+}
+
+/* USER CODE BEGIN Header_StartTask02 */
+/**
+* @brief Function implementing the myTask02 thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartTask02 */
+void StartTask02(void *argument)
+{
+  /* USER CODE BEGIN StartTask02 */
+  /* Infinite loop */
+  for(;;)
+  {
+		PRINT_UART("Hello from task 1\n");
+    osDelay(5000);
+  }
+  /* USER CODE END StartTask02 */
+}
+
+/* USER CODE BEGIN Header_StartTask03 */
+/**
+* @brief Function implementing the myTask03 thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartTask03 */
+void StartTask03(void *argument)
+{
+  /* USER CODE BEGIN StartTask03 */
+  /* Infinite loop */
+  for(;;)
+  {
+		PRINT_UART("Hello from task 2\n");
+    osDelay(3000);
+  }
+  /* USER CODE END StartTask03 */
+}
+
+/* USER CODE BEGIN Header_StartTask04 */
+/**
+* @brief Function implementing the myTask04 thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartTask04 */
+void StartTask04(void *argument)
+{
+  /* USER CODE BEGIN StartTask04 */
+  /* Infinite loop */
+  for(;;)
+  {
+		PRINT_UART("Hello from task 3\n");
+    osDelay(1000);
+  }
+  /* USER CODE END StartTask04 */
+}
+
+/**
+  * @brief  Period elapsed callback in non blocking mode
+  * @note   This function is called  when TIM1 interrupt took place, inside
+  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+  * a global variable "uwTick" used as application time base.
+  * @param  htim : TIM handle
+  * @retval None
+  */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  /* USER CODE BEGIN Callback 0 */
+
+  /* USER CODE END Callback 0 */
+  if (htim->Instance == TIM1) {
+    HAL_IncTick();
+  }
+  /* USER CODE BEGIN Callback 1 */
+
+  /* USER CODE END Callback 1 */
+}
 
 /**
   * @brief  This function is executed in case of error occurrence.

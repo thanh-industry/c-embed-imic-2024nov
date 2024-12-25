@@ -1,0 +1,15 @@
+c-embed-imic-2024nov\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/event_groups.c
+c-embed-imic-2024nov\event_groups.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+c-embed-imic-2024nov\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+c-embed-imic-2024nov\event_groups.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+c-embed-imic-2024nov\event_groups.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+c-embed-imic-2024nov\event_groups.o: ../Core/Inc/FreeRTOSConfig.h
+c-embed-imic-2024nov\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+c-embed-imic-2024nov\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+c-embed-imic-2024nov\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+c-embed-imic-2024nov\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+c-embed-imic-2024nov\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+c-embed-imic-2024nov\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+c-embed-imic-2024nov\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+c-embed-imic-2024nov\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
+c-embed-imic-2024nov\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
