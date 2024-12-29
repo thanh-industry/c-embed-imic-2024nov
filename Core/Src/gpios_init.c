@@ -66,7 +66,7 @@ void gpioRegisterSetup(void) {
 	registerBitClear(REG_GPIO_C_MODER, (BIT_12 | BIT_13));
 	registerBitSet(REG_GPIO_C_MODER, BIT_13);
 
-	// For AFRL, set mode AF3 (TIM8_CH1) for AFRH8 of PIN PA9
+	// For AFRL, set mode AF3 (TIM8_CH1) for AFRL6 of PIN PC6
 	registerBitSet(REG_GPIO_A_AFRL, (BIT_24 | BIT_25));
 	/* END registers set up TIMER8 PIN PC6 in PORT C */
 

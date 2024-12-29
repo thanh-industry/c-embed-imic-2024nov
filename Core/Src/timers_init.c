@@ -114,6 +114,7 @@ void timersRegisterSetup(void) {
 	 * */
 	// CCR1 value is 500 with 50% duty cycle (0.5) and ARR value of 999 DEC
 	uint32_t timer1_CCR1 = 0x1F4;								// HEX value of 500 DEC
+
 	registerBitSet(REG_TIM1_CCR1, timer1_CCR1);					// Add new value to CCR1 register
 
 
@@ -126,8 +127,8 @@ void timersRegisterSetup(void) {
 	/*
 	// Enable interrupt for both Update Interrupt and Compare Interrupt
 	registerBitSet(REG_TIM1_DIER, BIT_0);						// Enable UIE bit for Update Interrupt every time counter reach ARR
-	registerBitSet(REG_TIM1_DIER, BIT_1);						// Enable CC1IE bit for Compare Interrupt every time counter match CCR1
 	*/
+	//registerBitSet(REG_TIM1_DIER, BIT_1);						// Enable CC1IE bit for Compare Interrupt every time counter match CCR1
 
 	// Set up BDTR, TIM1 and TIM8 output pin will remain inactive until BDTR is set up
 	registerBitSet(REG_TIM1_BDTR, BIT_15);						// Enable Main output function of TIM1 Pin (currently PA8)
@@ -143,8 +144,10 @@ void timersRegisterSetup(void) {
 
 	// Setting for PSC and ARR to make 1KHz (1ms) timer
 	uint32_t timer8_PSC = 0x7;									// HEX value of 7 DEC
+	uint32_t timer8_ARR = 0xFFFF;								// HEX value of max 32 bit of TIM8 ARR register
 
-	registerBitSet(REG_TIM8_PSC, timer1_PSC);					// Add new value to PSC register
+	registerBitSet(REG_TIM8_PSC, timer8_PSC);					// Add new value to PSC register
+	registerBitSet(REG_TIM8_ARR, timer8_ARR);					// Add new value to ARR register
 
 	// Setting for Channel 1 of PC6 (TIM8_CH1)
 	registerBitClear(REG_TIM8_CCMR1, (BIT_0 | BIT_1));			// Clear CC1S bit (Capture/Compare 2 selection)
