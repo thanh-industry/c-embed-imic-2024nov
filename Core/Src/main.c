@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "cmsis_os.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -25,6 +26,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdarg.h>
+#include <string.h>
 #include "user_main_init.h"
 #include "registers_tools.h"
 #include "registers_defs.h"
@@ -43,12 +45,25 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
+#define PRINT_UART(f_, ...) 													   	   \
+			do {																   	   \
+				char _buffer[1024];													   \
+				snprintf(_buffer, sizeof(_buffer), (f_), ##__VA_ARGS__); 			   \
+				HAL_UART_Transmit(&huart4, (uint8_t *)_buffer, strlen(_buffer), 1000); \
+			} while (0)
 
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef huart4;
 
+/* Definitions for defaultTask */
+osThreadId_t defaultTaskHandle;
+const osThreadAttr_t defaultTask_attributes = {
+  .name = "defaultTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
 /* USER CODE BEGIN PV */
 static bool extiAlarmPA0 = false;
 static bool extiButtonToggle = false;
@@ -67,6 +82,8 @@ volatile uint32_t pulseFrequency = 0;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_UART4_Init(void);
+void StartDefaultTask(void *argument);
+
 /* USER CODE BEGIN PFP */
 void EXTI0_IRQHandler(void);
 void TIM1_CC_IRQHandler(void);
@@ -74,16 +91,15 @@ void TIM8_CC_IRQHandler(void);
 void TIM6_DAC_IRQHandler(void);
 void TIM7_IRQHandler(void);
 void interferenceCheck(void);
+
+// For RTOS
+void startButtonHandleTask(void *argument);
+void startButtonExecuteTask(void *argument);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-#define PRINT_UART(f_, ...) 													   	   \
-			do {																   	   \
-				char _buffer[1024];													   \
-				snprintf(_buffer, sizeof(_buffer), (f_), ##__VA_ARGS__); 			   \
-				HAL_UART_Transmit(&huart4, (uint8_t *)_buffer, strlen(_buffer), 1000); \
-			} while (0)
 
 /* USER CODE END 0 */
 
@@ -110,6 +126,14 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
+
+
+  /* USER CODE END SysInit */
+
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  MX_UART4_Init();
+  /* USER CODE BEGIN 2 */
   userInit();
   // Set priority and enable NVIC (Nested vectored interrupt controller)
   HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
@@ -128,19 +152,76 @@ int main(void)
   */
 
   // Enable NVIC for Capture/Compare interrupt in Timer 1
-  NVIC_EnableIRQ(TIM1_CC_IRQn);
+  //NVIC_EnableIRQ(TIM1_CC_IRQn);
 
   // Enable NVIC for Capture/Compare interrupt in Timer 8
   NVIC_EnableIRQ(TIM8_CC_IRQn);
-
-  /* USER CODE END SysInit */
-
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_UART4_Init();
-  /* USER CODE BEGIN 2 */
-
   /* USER CODE END 2 */
+
+  /* Init scheduler */
+  osKernelInitialize();
+
+  /* USER CODE BEGIN RTOS_MUTEX */
+  /* add mutexes, ... */
+  /* USER CODE END RTOS_MUTEX */
+
+  /* USER CODE BEGIN RTOS_SEMAPHORES */
+  /* add semaphores, ... */
+  /* USER CODE END RTOS_SEMAPHORES */
+
+  /* USER CODE BEGIN RTOS_TIMERS */
+  /* start timers, add new ones, ... */
+  /* USER CODE END RTOS_TIMERS */
+
+  /* USER CODE BEGIN RTOS_QUEUES */
+  /* add queues, ... */
+  /* USER CODE END RTOS_QUEUES */
+
+  /* Create the thread(s) */
+  /* creation of defaultTask */
+  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+
+  /* USER CODE BEGIN RTOS_THREADS */
+  /* add threads, ... */
+  osThreadId_t buttonHandle;
+  const osThreadAttr_t buttonHandle_attributes = {
+    .name = "buttonInterference",
+    .stack_size = 128 * 4,
+    .priority = (osPriority_t) osPriorityNormal1,
+  };
+
+  osThreadId_t buttonExecute;
+  const osThreadAttr_t buttonExecute_attributes = {
+	.name = "buttonExecution",
+	.stack_size = 128 * 4,
+	.priority = (osPriority_t) osPriorityNormal,
+  };
+
+  buttonHandle = osThreadNew(startButtonHandleTask, NULL, &buttonHandle_attributes);
+  if (buttonHandle == NULL) {
+	  PRINT_UART("buttonHandle Thread is failed to be created\r\n");
+  }
+  else {
+	  PRINT_UART("buttonHandle Thread created successfully\r\n");
+  }
+
+  buttonExecute = osThreadNew(startButtonExecuteTask, NULL, &buttonExecute_attributes);
+  if (buttonExecute == NULL) {
+	  PRINT_UART("buttonExecute Thread is failed to be created\r\n");
+  }
+  else {
+	  PRINT_UART("buttonExecute Thread created successfully\r\n");
+  }
+  /* USER CODE END RTOS_THREADS */
+
+  /* USER CODE BEGIN RTOS_EVENTS */
+  /* add events, ... */
+  /* USER CODE END RTOS_EVENTS */
+
+  /* Start scheduler */
+  osKernelStart();
+
+  /* We should never get here as control is now taken by the scheduler */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -150,34 +231,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	  if(extiAlarmPA0) {
-		  interferenceCheck();
-	  }
 
-	  if(timer8CaptureAlarm) {
-		  pulseFrequency = 1000000 / pulsePeriod; // pulsePeriod is us, need to change to s
-		  PRINT_UART("The period and frequency of Timer 1 Pulse is : %d and %d", pulsePeriod, pulseFrequency);
-		  timer8CaptureAlarm = false;
-	  }
-
-	  if (extiButtonToggle) {
-
-		  if (timer6Alarm) {
-			  timer6Alarm = false;
-			  timer6LedToggle ^= 1;
-			  ledSet(LED_GREEN, timer6LedToggle);
-		  }
-
-		  if (timer7Alarm) {
-			  timer7Alarm = false;
-			  timer7LedToggle ^= 1;
-			  ledSet(LED_BLUE, timer7LedToggle);
-		  }
-	  }
-	  else {
-		  ledSet(LED_GREEN, 0);
-		  ledSet(LED_BLUE, 0);
-	  }
 
   }
   /* USER CODE END 3 */
@@ -302,7 +356,7 @@ static void MX_GPIO_Init(void)
 // Check interference of button
 void interferenceCheck(void) {
 	if (registerBitCheck(REG_GPIO_A_IDR, BIT_0)) {
-		HAL_Delay(100);
+		osDelay(100);
 		if (registerBitCheck(REG_GPIO_A_IDR, BIT_0)) {
 			uint32_t count = 8000000; //count value for 1s based on 8Mhz frequency
 			while (registerBitCheck(REG_GPIO_A_IDR, BIT_0) && count >= 0) {
@@ -331,13 +385,16 @@ void EXTI0_IRQHandler(void) {
 
 // Function for NVIC TIM1 Capture/Compare Interrupt
 void TIM1_CC_IRQHandler(void) {
-
+	if (registerBitCheck(REG_TIM1_SR, BIT_1)) {
+		PRINT_UART("TIMER 1 Pulse is running");
+		registerBitClear(REG_TIM1_SR, BIT_1);
+	}
 }
 
 // Function for NVIC TIM8 Capture/Compare Interrupt
 void TIM8_CC_IRQHandler(void) {
 	if (registerBitCheck(REG_TIM8_SR, BIT_1)) {
-		uint32_t currentCapture = registerRead(REG_TIM8_CCMR1);
+		uint32_t currentCapture = registerRead(REG_TIM8_CCR1);
 		if (currentCapture >= lastCapture) {
 			pulsePeriod = currentCapture - lastCapture;
 		}
@@ -345,6 +402,7 @@ void TIM8_CC_IRQHandler(void) {
 			// This is for the case which the lastCapture is before overflow and currentCapture is after overflow
 			pulsePeriod = 0xFFFF - lastCapture + currentCapture +1;
 		}
+		lastCapture = currentCapture;
 		// Clear capture interrupt flag
 		registerBitClear(REG_TIM8_SR, BIT_1);
 
@@ -375,7 +433,95 @@ void TIM7_IRQHandler(void) {
 	}
 }
 
+// For RTOS
+
+void startButtonHandleTask(void *argument) {
+	for(;;) {
+		if(extiAlarmPA0) {
+			interferenceCheck();
+		}
+
+
+		osDelay(1);
+	}
+}
+
+void startButtonExecuteTask(void *argument) {
+	for(;;) {
+		if (extiButtonToggle) {
+
+			if (timer6Alarm) {
+				timer6Alarm = false;
+				timer6LedToggle ^= 1;
+				ledSet(LED_GREEN, timer6LedToggle);
+			}
+
+			if (timer7Alarm) {
+				timer7Alarm = false;
+				timer7LedToggle ^= 1;
+				ledSet(LED_BLUE, timer7LedToggle);
+			}
+		}
+		else {
+			ledSet(LED_GREEN, 0);
+			ledSet(LED_BLUE, 0);
+		}
+
+	}
+}
+
 /* USER CODE END 4 */
+
+/* USER CODE BEGIN Header_StartDefaultTask */
+/**
+  * @brief  Function implementing the defaultTask thread.
+  * @param  argument: Not used
+  * @retval None
+  */
+/* USER CODE END Header_StartDefaultTask */
+void StartDefaultTask(void *argument)
+{
+  /* USER CODE BEGIN 5 */
+  /* Infinite loop */
+  for(;;)
+  {
+	//timer8CaptureAlarm = true;
+	if(timer8CaptureAlarm) {
+		if(pulsePeriod != 0) {
+			pulseFrequency = 1000000 / pulsePeriod; // pulsePeriod is us, need to change to s
+		}
+		else {
+			pulseFrequency = 0;
+		}
+		//PRINT_UART("The period and frequency of Timer 1 Pulse is : %lu and %lu\r\n", pulsePeriod, pulseFrequency);
+		osDelay(1000);
+		timer8CaptureAlarm = false;
+	}
+    osDelay(1);
+  }
+  /* USER CODE END 5 */
+}
+
+/**
+  * @brief  Period elapsed callback in non blocking mode
+  * @note   This function is called  when TIM14 interrupt took place, inside
+  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+  * a global variable "uwTick" used as application time base.
+  * @param  htim : TIM handle
+  * @retval None
+  */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  /* USER CODE BEGIN Callback 0 */
+
+  /* USER CODE END Callback 0 */
+  if (htim->Instance == TIM14) {
+    HAL_IncTick();
+  }
+  /* USER CODE BEGIN Callback 1 */
+
+  /* USER CODE END Callback 1 */
+}
 
 /**
   * @brief  This function is executed in case of error occurrence.
