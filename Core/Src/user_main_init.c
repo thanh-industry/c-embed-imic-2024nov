@@ -10,6 +10,7 @@
 #include "gpios_init.h"
 #include "interrupts_init.h"
 #include "timers_init.h"
+#include "i2c_init.h"
 
 
 void userInit(void) {
@@ -17,5 +18,6 @@ void userInit(void) {
 	gpiosInit();
 	interruptsInit();
 	timersInit();
+	i2cInit();
 }
 
