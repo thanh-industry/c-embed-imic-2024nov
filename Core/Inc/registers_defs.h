@@ -231,10 +231,55 @@
 
 
 
+/*-----------------------------------------I2C REG-----------------------------------------*/
+
+
+
+/*--------------------BASE--------------------*/
+#define REG_I2C1_BASE				0x40005400													// Register base address of I2C 1
+/*--------------------BASE--------------------*/
+
+
+
+/*--------------------OFFSET--------------------*/
+#define REG_I2C_CR1_OFFSET			0x00
+#define REG_I2C_CR2_OFFSET			0x04
+#define REG_I2C_OAR1_OFFSET			0x08
+#define REG_I2C_OAR2_OFFSET			0x0C
+#define REG_I2C_DR_OFFSET			0x10
+#define REG_I2C_SR1_OFFSET			0x14
+#define REG_I2C_SR2_OFFSET			0x18
+#define REG_I2C_CCR_OFFSET			0x1C
+#define REG_I2C_TRISE_OFFSET		0x20
+#define REG_I2C_FLTR_OFFSET			0x24
+/*--------------------OFFSET--------------------*/
+
+
+
+/*--------------------FINAL--------------------*/
+#define REG_I2C1_CR1				((uint32_t *)(REG_I2C1_BASE + REG_I2C_CR1_OFFSET))
+#define REG_I2C1_CR2				((uint32_t *)(REG_I2C1_BASE + REG_I2C_CR2_OFFSET))
+#define REG_I2C1_OAR1				((uint32_t *)(REG_I2C1_BASE + REG_I2C_OAR1_OFFSET))
+#define REG_I2C1_OAR2				((uint32_t *)(REG_I2C1_BASE + REG_I2C_OAR2_OFFSET))
+#define REG_I2C1_DR					((uint32_t *)(REG_I2C1_BASE + REG_I2C_DR_OFFSET))
+#define REG_I2C1_SR1				((uint32_t *)(REG_I2C1_BASE + REG_I2C_SR1_OFFSET))
+#define REG_I2C1_SR2				((uint32_t *)(REG_I2C1_BASE + REG_I2C_SR2_OFFSET))
+#define REG_I2C1_CCR				((uint32_t *)(REG_I2C1_BASE + REG_I2C_CCR_OFFSET))
+#define REG_I2C1_TRISE				((uint32_t *)(REG_I2C1_BASE + REG_I2C_TRISE_OFFSET))
+#define REG_I2C1_FLTR				((uint32_t *)(REG_I2C1_BASE + REG_I2C_FLTR_OFFSET))
+/*--------------------FINAL--------------------*/
+
+
+
+/*-----------------------------------------I2C REG-----------------------------------------*/
+
+
+
 /*-----------------------------------------GPIO REG-----------------------------------------*/
 
 /*--------------------BASE--------------------*/
 #define REG_GPIO_A_BASE				0x40020000													// Register base address of GPIO A
+#define REG_GPIO_B_BASE				0x40020400													// Register base address of GPIO B
 #define REG_GPIO_C_BASE				0x40020800													// Register base address of GPIO C
 #define REG_GPIO_D_BASE 			0x40020C00													// Register base address of GPIO D
 #define REG_GPIO_H_BASE				0x40021C00													// Register base address of GPIO H
@@ -290,6 +335,27 @@
 #define REG_GPIO_A_AFRL				((uint32_t *)(REG_GPIO_A_BASE + REG_GPIOx_AFRL_OFFSET))
 #define REG_GPIO_A_AFRH				((uint32_t *)(REG_GPIO_A_BASE + REG_GPIOx_AFRH_OFFSET))
 /*--------------------FINAL GPIO PORT A--------------------*/
+
+
+
+/*--------------------FINAL GPIO PORT B--------------------*/
+
+// 4 configuration registers
+#define REG_GPIO_B_MODER			((uint32_t *)(REG_GPIO_B_BASE + REG_GPIOx_MODER_OFFSET))
+#define REG_GPIO_B_OTYPER			((uint32_t *)(REG_GPIO_B_BASE + REG_GPIOx_OTYPER_OFFSET))
+#define REG_GPIO_B_OSPEEDR			((uint32_t *)(REG_GPIO_B_BASE + REG_GPIOx_OSPEEDR_OFFSET))
+#define REG_GPIO_B_PUPDR			((uint32_t *)(REG_GPIO_B_BASE + REG_GPIOx_PUPDR_OFFSET))
+// 2 data registers
+#define REG_GPIO_B_IDR				((uint32_t *)(REG_GPIO_B_BASE + REG_GPIOx_IDR_OFFSET))
+#define REG_GPIO_B_ODR				((uint32_t *)(REG_GPIO_B_BASE + REG_GPIOx_ODR_OFFSET))
+// 1 set/reset register
+#define REG_GPIO_B_BSRR				((uint32_t *)(REG_GPIO_B_BASE + REG_GPIOx_BSRR_OFFSET))
+// 1 locking register
+#define REG_GPIO_B_LCKR				((uint32_t *)(REG_GPIO_B_BASE + REG_GPIOx_LCKR_OFFSET))
+// 2 alternate function selection register
+#define REG_GPIO_B_AFRL				((uint32_t *)(REG_GPIO_B_BASE + REG_GPIOx_AFRL_OFFSET))
+#define REG_GPIO_B_AFRH				((uint32_t *)(REG_GPIO_B_BASE + REG_GPIOx_AFRH_OFFSET))
+/*--------------------FINAL GPIO PORT B--------------------*/
 
 
 
