@@ -9,6 +9,7 @@
 #define INC_TIMERS_INIT_H_
 
 void timersInit(void);
+void timerPinSetup(void);
 void timersRegisterSetup(void);
 
 #endif /* INC_TIMERS_INIT_H_ */

@@ -11,7 +11,32 @@
 #include "registers_defs.h"
 
 void timersInit(void) {
+	timerPinSetup();
 	timersRegisterSetup();
+}
+
+void timerPinSetup() {
+	/* START registers set up TIMER1 PIN PA8 in PORT A */
+
+	// For MODER, set mode 10 (Alternate function mode)
+	registerBitClear(REG_GPIO_A_MODER, (BIT_16 | BIT_17));
+	registerBitSet(REG_GPIO_A_MODER, BIT_17);
+
+	// For AFRH, set mode AF1 (TIM1_CH1) for AFRH8 of PIN PA8
+	registerBitSet(REG_GPIO_A_AFRH, BIT_0);
+	/* END registers set up TIMER1 PIN PA8 in PORT A */
+
+
+
+	/* START registers set up TIMER8 PIN PC6 in PORT C */
+
+	// For MODER, set mode 10 (Alternate function mode)
+	registerBitClear(REG_GPIO_C_MODER, (BIT_12 | BIT_13));
+	registerBitSet(REG_GPIO_C_MODER, BIT_13);
+
+	// For AFRL, set mode AF3 (TIM8_CH1) for AFRL6 of PIN PC6
+	registerBitSet(REG_GPIO_A_AFRL, (BIT_24 | BIT_25));
+	/* END registers set up TIMER8 PIN PC6 in PORT C */
 }
 
 void timersRegisterSetup(void) {
