@@ -31,6 +31,7 @@
 #include "registers_tools.h"
 #include "registers_defs.h"
 #include "led_tools.h"
+#include "i2c_tools.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -95,6 +96,7 @@ void interferenceCheck(void);
 // For RTOS
 void startButtonHandleTask(void *argument);
 void startButtonExecuteTask(void *argument);
+void startRTCTime(void *argument);
 
 /* USER CODE END PFP */
 
@@ -197,21 +199,26 @@ int main(void)
 	.priority = (osPriority_t) osPriorityNormal,
   };
 
+  osThreadId_t rtcTimeExecute;
+  const osThreadAttr_t rtcTimeExecute_attributes ={
+	.name = "rtcTimeExecute",
+	.stack_size = 128 * 4,
+	.priority = (osPriority_t) osPriorityLow,
+  };
+
+
   buttonHandle = osThreadNew(startButtonHandleTask, NULL, &buttonHandle_attributes);
-  if (buttonHandle == NULL) {
-	  PRINT_UART("buttonHandle Thread is failed to be created\r\n");
-  }
-  else {
-	  PRINT_UART("buttonHandle Thread created successfully\r\n");
-  }
+  if (NULL == buttonHandle) PRINT_UART("buttonHandle Thread is failed to be created\r\n");
+  else PRINT_UART("buttonHandle Thread created successfully\r\n");
 
   buttonExecute = osThreadNew(startButtonExecuteTask, NULL, &buttonExecute_attributes);
-  if (buttonExecute == NULL) {
-	  PRINT_UART("buttonExecute Thread is failed to be created\r\n");
-  }
-  else {
-	  PRINT_UART("buttonExecute Thread created successfully\r\n");
-  }
+  if (NULL == buttonExecute) PRINT_UART("buttonExecute Thread is failed to be created\r\n");
+  else PRINT_UART("buttonExecute Thread created successfully\r\n");
+
+  rtcTimeExecute = osThreadNew(startRTCTime, NULL, &rtcTimeExecute_attributes);
+  if (NULL == rtcTimeExecute) PRINT_UART("rtcTimeSet Thread is failed to be created\r\n");
+  else PRINT_UART("rtcTimeSet Thread created successfully\r\n");
+
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
@@ -469,6 +476,30 @@ void startButtonExecuteTask(void *argument) {
 
 	}
 }
+
+void startRTCTime(void *argument) {
+	uint8_t seconds, minutes, hours, day, date, month, year, isPM;
+	char weekDay[8][9] = { "", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+	char pm[2][2] = {"AM", "PM"};
+
+	// Set up the RTC DS3231 for the first time
+	i2cWrite(DS3231_ADDRESS, DS3231_SECONDS, 0x12); 		// Seconds as 12 seconds
+	i2cWrite(DS3231_ADDRESS, DS3231_MINUTES, 0x12); 		// Minutes as 12 minutes
+	i2cWrite(DS3231_ADDRESS, DS3231_HOURS, 0x72); 			// Hours as 12 hours, 12h format, PM
+	i2cWrite(DS3231_ADDRESS, DS3231_DAY, 0x01);				// Week day as 1 (Sunday)
+	i2cWrite(DS3231_ADDRESS, DS3231_DATE, 0x05);			// Date of month (5)
+	i2cWrite(DS3231_ADDRESS, DS3231_CEN_MONTH, 0x01);		// Month (1 as January), Century (Bit 7 as 0 for 2000 - 2099)
+	i2cWrite(DS3231_ADDRESS, DS3231_2LDIGI_YEAR, 0x25);		// Year (25 as 2 last digit)
+
+	// Infinite loop to read the data every 30s
+	for (;;) {
+		readDS3231Time(seconds, minutes, hours, day, date, month, year, isPM);
+		PRINT_UART("Time: %02d:%02d:%02d %s\n", hours, minutes, seconds, pm[isPM]);
+		PRINT_UART("Date: %02d/%02d/20%02d, Day: %s\n", date, month, year, weekDay[day]);
+		osDelay(30000);
+	}
+}
+
 
 /* USER CODE END 4 */
 
