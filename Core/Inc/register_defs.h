@@ -7,6 +7,8 @@
 #define REG_GPIO_PORT_D   0x40020C00                       //address base GPIOD
 #define REG_GPIO_PORT_A   0x40020000                       //address base GPIOA
 #define REG_GPIO_PORT_H   0x40021C00                       //address base GPIOH
+#define REG_GPIO_PORT_C   0x40020800                       //address base GPIOC
+
 
 #define REG_RCC_AHB1ENR_OFFSET      0X30     
 #define REG_RCC_APB1ENR_OFFSET      0X40
@@ -24,8 +26,12 @@
 #define REG_SYSCFG_BASE             0X40013800             //address base SYSCFG (System configuration register)-cau hinh he thong
 #define REG_EXTI_BASE               0x40013C00             //address base EXTI (External Interrupt register)-dieu khien ngat ngoai
 #define REG_NVIC_BASE				        0xE000E100             //address base NVIC (Nested Vector Interrupt Controller)-Khoi quan ly, dieu khien ngat
+
 #define REG_TIM6_BASE               0x40001000							
 #define REG_TIM7_BASE               0x40001400	
+#define REG_TIM1_BASE               0x40010000	
+#define REG_TIM8_BASE               0x40010400	
+
 
 #define REG_RCC_AHB1ENR				      ((uint32_t *)(REG_RCC_BASE + REG_RCC_AHB1ENR_OFFSET))          //set register nay de kich hoat Clock cho PORTA,PORTD
 #define REG_RCC_APB1ENR				      ((uint32_t *)(REG_RCC_BASE + REG_RCC_APB1ENR_OFFSET))          //set register nay kich hoat TIMER6,7
@@ -82,15 +88,40 @@
 #define REG_GPIOH_AFRL              ((uint32_t *)(REG_GPIO_PORT_H + REG_GPIOx_AFRL_OFFSET   )) 
 #define REG_GPIOH_AFRH              ((uint32_t *)(REG_GPIO_PORT_H + REG_GPIOx_AFRH_OFFSET   )) 
 
+#define REG_GPIOC_MODER             ((uint32_t *)(REG_GPIO_PORT_C + REG_GPIOx_MODER_OFFSET  ))     
+#define REG_GPIOC_OTYPER            ((uint32_t *)(REG_GPIO_PORT_C + REG_GPIOx_OTYPER_OFFSET ))     
+#define REG_GPIOC_OSPEEDR           ((uint32_t *)(REG_GPIO_PORT_C + REG_GPIOx_OSPEEDR_OFFSET)) 
+#define REG_GPIOC_PUPDR             ((uint32_t *)(REG_GPIO_PORT_C + REG_GPIOx_PUPDR_OFFSET  )) 
+#define REG_GPIOC_IDR               ((uint32_t *)(REG_GPIO_PORT_C + REG_GPIOx_IDR_OFFSET    )) 
+#define REG_GPIOC_ODR               ((uint32_t *)(REG_GPIO_PORT_C + REG_GPIOx_ODR_OFFSET    )) 
+#define REG_GPIOC_BSRR              ((uint32_t *)(REG_GPIO_PORT_C + REG_GPIOx_BSRR_OFFSET   )) 
+#define REG_GPIOC_LCKR              ((uint32_t *)(REG_GPIO_PORT_C + REG_GPIOx_LCKR_OFFSET   )) 
+#define REG_GPIOC_AFRL              ((uint32_t *)(REG_GPIO_PORT_C + REG_GPIOx_AFRL_OFFSET   )) 
+#define REG_GPIOC_AFRH              ((uint32_t *)(REG_GPIO_PORT_C + REG_GPIOx_AFRH_OFFSET   )) 
+
+
 //TIMER6 AND TIMER7
 #define REG_TIMx_CR1_OFFSET         0X00
 #define REG_TIMx_CR2_OFFSET         0X04
+#define REG_TIMx_SMCR_OFFSET        0X08
 #define REG_TIMx_DIER_OFFSET        0X0C
 #define REG_TIMx_SR_OFFSET          0X10
 #define REG_TIMx_EGR_OFFSET         0X14
+#define REG_TIMx_CCMR1_OFFSET       0X18
+#define REG_TIMx_CCMR2_OFFSET       0X1C
+#define REG_TIMx_CCER_OFFSET        0X20
 #define REG_TIMx_CNT_OFFSET         0X24
 #define REG_TIMx_PSC_OFFSET         0X28
 #define REG_TIMx_ARR_OFFSET         0X2C
+#define REG_TIMx_RCR_OFFSET         0X30
+#define REG_TIMx_CCR1_OFFSET        0X34
+#define REG_TIMx_CCR2_OFFSET        0X38
+#define REG_TIMx_CCR3_OFFSET        0X3C
+#define REG_TIMx_CCR4_OFFSET        0X40
+#define REG_TIMx_BDTR_OFFSET        0X44
+#define REG_TIMx_DCR_OFFSET         0X48
+#define REG_TIMx_DMAR_OFFSET        0X4C
+
 
 #define REG_TIM6_CR1                ((uint32_t*)(REG_TIM6_BASE + REG_TIMx_CR1_OFFSET))
 #define REG_TIM6_CR2                ((uint32_t*)(REG_TIM6_BASE + REG_TIMx_CR2_OFFSET))
@@ -100,7 +131,8 @@
 #define REG_TIM6_CNT                ((uint32_t*)(REG_TIM6_BASE + REG_TIMx_CNT_OFFSET))
 #define REG_TIM6_PSC                ((uint32_t*)(REG_TIM6_BASE + REG_TIMx_PSC_OFFSET))
 #define REG_TIM6_ARR                ((uint32_t*)(REG_TIM6_BASE + REG_TIMx_ARR_OFFSET))
-																			
+	
+	
 #define REG_TIM7_CR1                ((uint32_t*)(REG_TIM7_BASE + REG_TIMx_CR1_OFFSET))
 #define REG_TIM7_CR2                ((uint32_t*)(REG_TIM7_BASE + REG_TIMx_CR2_OFFSET))
 #define REG_TIM7_DIER               ((uint32_t*)(REG_TIM7_BASE + REG_TIMx_DIER_OFFSET))
@@ -109,6 +141,49 @@
 #define REG_TIM7_CNT                ((uint32_t*)(REG_TIM7_BASE + REG_TIMx_CNT_OFFSET))
 #define REG_TIM7_PSC                ((uint32_t*)(REG_TIM7_BASE + REG_TIMx_PSC_OFFSET))
 #define REG_TIM7_ARR                ((uint32_t*)(REG_TIM7_BASE + REG_TIMx_ARR_OFFSET))
+
+
+#define REG_TIM1_CR1                ((uint32_t*)(REG_TIM1_BASE +	REG_TIMx_CR1_OFFSET  ))
+#define REG_TIM1_CR2                ((uint32_t*)(REG_TIM1_BASE +	REG_TIMx_CR2_OFFSET  ))
+#define REG_TIM1_SMCR               ((uint32_t*)(REG_TIM1_BASE +	REG_TIMx_SMCR_OFFSET ))
+#define REG_TIM1_DIER               ((uint32_t*)(REG_TIM1_BASE +	REG_TIMx_DIER_OFFSET ))
+#define REG_TIM1_SR                 ((uint32_t*)(REG_TIM1_BASE +	REG_TIMx_SR_OFFSET   ))
+#define REG_TIM1_EGR                ((uint32_t*)(REG_TIM1_BASE +	REG_TIMx_EGR_OFFSET  ))
+#define REG_TIM1_CCMR1              ((uint32_t*)(REG_TIM1_BASE +	REG_TIMx_CCMR1_OFFSET))
+#define REG_TIM1_CCMR2              ((uint32_t*)(REG_TIM1_BASE +	REG_TIMx_CCMR2_OFFSET))
+#define REG_TIM1_CCER               ((uint32_t*)(REG_TIM1_BASE +	REG_TIMx_CCER_OFFSET ))
+#define REG_TIM1_CNT                ((uint32_t*)(REG_TIM1_BASE +	REG_TIMx_CNT_OFFSET  ))
+#define REG_TIM1_PSC                ((uint32_t*)(REG_TIM1_BASE +	REG_TIMx_PSC_OFFSET  ))
+#define REG_TIM1_ARR                ((uint32_t*)(REG_TIM1_BASE +	REG_TIMx_ARR_OFFSET  ))
+#define REG_TIM1_RCR                ((uint32_t*)(REG_TIM1_BASE +	REG_TIMx_RCR_OFFSET  ))
+#define REG_TIM1_CCR1               ((uint32_t*)(REG_TIM1_BASE +	REG_TIMx_CCR1_OFFSET ))
+#define REG_TIM1_CCR2               ((uint32_t*)(REG_TIM1_BASE +	REG_TIMx_CCR2_OFFSET ))
+#define REG_TIM1_CCR3               ((uint32_t*)(REG_TIM1_BASE +	REG_TIMx_CCR3_OFFSET ))
+#define REG_TIM1_CCR4               ((uint32_t*)(REG_TIM1_BASE +	REG_TIMx_CCR4_OFFSET ))
+#define REG_TIM1_BDTR               ((uint32_t*)(REG_TIM1_BASE +	REG_TIMx_BDTR_OFFSET ))
+#define REG_TIM1_DCR                ((uint32_t*)(REG_TIM1_BASE +	REG_TIMx_DCR_OFFSET  ))
+#define REG_TIM1_DMAR               ((uint32_t*)(REG_TIM1_BASE +	REG_TIMx_DMAR_OFFSET ))
+                                    
+#define REG_TIM8_CR1                ((uint32_t*)(REG_TIM8_BASE +	REG_TIMx_CR1_OFFSET  ))
+#define REG_TIM8_CR2                ((uint32_t*)(REG_TIM8_BASE +	REG_TIMx_CR2_OFFSET  ))
+#define REG_TIM8_SMCR               ((uint32_t*)(REG_TIM8_BASE +	REG_TIMx_SMCR_OFFSET ))
+#define REG_TIM8_DIER               ((uint32_t*)(REG_TIM8_BASE +	REG_TIMx_DIER_OFFSET ))
+#define REG_TIM8_SR                 ((uint32_t*)(REG_TIM8_BASE +	REG_TIMx_SR_OFFSET   ))
+#define REG_TIM8_EGR                ((uint32_t*)(REG_TIM8_BASE +	REG_TIMx_EGR_OFFSET  ))
+#define REG_TIM8_CCMR1              ((uint32_t*)(REG_TIM8_BASE +	REG_TIMx_CCMR1_OFFSET))
+#define REG_TIM8_CCMR2              ((uint32_t*)(REG_TIM8_BASE +	REG_TIMx_CCMR2_OFFSET))
+#define REG_TIM8_CCER               ((uint32_t*)(REG_TIM8_BASE +	REG_TIMx_CCER_OFFSET ))
+#define REG_TIM8_CNT                ((uint32_t*)(REG_TIM8_BASE +	REG_TIMx_CNT_OFFSET  ))
+#define REG_TIM8_PSC                ((uint32_t*)(REG_TIM8_BASE +	REG_TIMx_PSC_OFFSET  ))
+#define REG_TIM8_ARR                ((uint32_t*)(REG_TIM8_BASE +	REG_TIMx_ARR_OFFSET  ))
+#define REG_TIM8_RCR                ((uint32_t*)(REG_TIM8_BASE +	REG_TIMx_RCR_OFFSET  ))
+#define REG_TIM8_CCR1               ((uint32_t*)(REG_TIM8_BASE +	REG_TIMx_CCR1_OFFSET ))
+#define REG_TIM8_CCR2               ((uint32_t*)(REG_TIM8_BASE +	REG_TIMx_CCR2_OFFSET ))
+#define REG_TIM8_CCR3               ((uint32_t*)(REG_TIM8_BASE +	REG_TIMx_CCR3_OFFSET ))
+#define REG_TIM8_CCR4               ((uint32_t*)(REG_TIM8_BASE +	REG_TIMx_CCR4_OFFSET ))
+#define REG_TIM8_BDTR               ((uint32_t*)(REG_TIM8_BASE +	REG_TIMx_BDTR_OFFSET ))
+#define REG_TIM8_DCR                ((uint32_t*)(REG_TIM8_BASE +	REG_TIMx_DCR_OFFSET  ))
+#define REG_TIM8_DMAR               ((uint32_t*)(REG_TIM8_BASE +	REG_TIMx_DMAR_OFFSET ))
 
 
 
