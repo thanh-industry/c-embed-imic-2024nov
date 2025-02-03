@@ -1,14 +1,15 @@
 /*
- * i2c_tools.h
+ * i2c.h
  *
  *  Created on: Jan 3, 2025
  *      Author: daoch
  */
 
-#ifndef INC_I2C_TOOLS_H_
-#define INC_I2C_TOOLS_H_
+#ifndef INC_I2C_H_
+#define INC_I2C_H_
 
 #include <stdbool.h>
+#include "stdint.h"
 
 //DS3231 Slave address
 #define DS3231_ADDRESS				0x68
@@ -33,9 +34,17 @@
 #define DS3231_TEMP_MSB 			0x11
 #define DS3231_TEMP_LSB 			0x12
 
+#define TIMEOUT_LIMIT				800000
+
+void i2cInit(void);
+void i2cPinSetup(void);
+void i2cRegisterSetup(void);
+void DS3231Init(void);
+
 bool i2cWrite(uint8_t slaveAddr, uint8_t regAddr, uint8_t data);
 uint8_t i2cRead(uint8_t slaveAddr, uint8_t regAddr);
-uint8_t hexToDec(uint8_t hex);
-void readDS3231Time(uint8_t seconds, uint8_t minutes, uint8_t hours, uint8_t day, uint8_t date, uint8_t month, uint8_t year, uint8_t isPM);
+uint8_t BCDToDec(uint8_t BCD);
+uint8_t DecToBCD(uint8_t Dec);
+void readDS3231Time(uint8_t *seconds, uint8_t *minutes, uint8_t *hours, uint8_t *day, uint8_t *date, uint8_t *month, uint8_t *year, uint8_t *isPM);
 
-#endif /* INC_I2C_TOOLS_H_ */
+#endif /* INC_I2C_H_ */
