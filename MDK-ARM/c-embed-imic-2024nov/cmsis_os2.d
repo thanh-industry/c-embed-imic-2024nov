@@ -42,6 +42,8 @@ c-embed-imic-2024nov\cmsis_os2.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_
 c-embed-imic-2024nov\cmsis_os2.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h
 c-embed-imic-2024nov\cmsis_os2.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h
 c-embed-imic-2024nov\cmsis_os2.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
+c-embed-imic-2024nov\cmsis_os2.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h
+c-embed-imic-2024nov\cmsis_os2.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h
 c-embed-imic-2024nov\cmsis_os2.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 c-embed-imic-2024nov\cmsis_os2.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 c-embed-imic-2024nov\cmsis_os2.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h

@@ -26,6 +26,8 @@ c-embed-imic-2024nov\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_c
 c-embed-imic-2024nov\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h
 c-embed-imic-2024nov\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h
 c-embed-imic-2024nov\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
+c-embed-imic-2024nov\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h
+c-embed-imic-2024nov\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h
 c-embed-imic-2024nov\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 c-embed-imic-2024nov\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 c-embed-imic-2024nov\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
@@ -42,13 +44,3 @@ c-embed-imic-2024nov\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/
 c-embed-imic-2024nov\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
 c-embed-imic-2024nov\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
 c-embed-imic-2024nov\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
-c-embed-imic-2024nov\main.o: ../Core/My_Lib/my_lib.h
-c-embed-imic-2024nov\main.o: ../Core/My_Lib/register_helpers.h
-c-embed-imic-2024nov\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-c-embed-imic-2024nov\main.o: ../Core/My_Lib/my_lib.h
-c-embed-imic-2024nov\main.o: ../Core/My_Lib/register_defs.h
-c-embed-imic-2024nov\main.o: ../Core/My_Lib/gpio.h
-c-embed-imic-2024nov\main.o: ../Core/My_Lib/exti.h
-c-embed-imic-2024nov\main.o: ../Core/My_Lib/timer.h
-c-embed-imic-2024nov\main.o: ../Core/My_Lib/led.h
-c-embed-imic-2024nov\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
