@@ -22,27 +22,29 @@ Dialog DLL:      TCM.DLL V1.46.0.0
  
 <h2>Project:</h2>
 C:\Users\Huy\Documents\STM32Project\1_MIC\c-embed-imic-2024nov\MDK-ARM\c-embed-imic-2024nov.uvprojx
-Project File Date:  02/10/2025
+Project File Date:  02/11/2025
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'c-embed-imic-2024nov'
-assembling startup_stm32f407xx.s...
-compiling stm32f4xx_hal_msp.c...
 compiling main.c...
-../Core/Src/main.c(347): warning:  #223-D: function "snprintf" declared implicitly
-  		PRINT_UART("Hello\n");
-../Core/Src/main.c(347): warning:  #223-D: function "strlen" declared implicitly
-  		PRINT_UART("Hello\n");
-../Core/Src/main.c(367): warning:  #223-D: function "snprintf" declared implicitly
-  		PRINT_UART("Hello 2\n");
-../Core/Src/main.c(367): warning:  #223-D: function "strlen" declared implicitly
-  		PRINT_UART("Hello 2\n");
-../Core/Src/main.c: 4 warnings, 0 errors
+../Core/Src/main.c(366): warning:  #223-D: function "snprintf" declared implicitly
+  					PRINT_UART("%.2f\n", imu_data_copy.roll * RAD2DEG);
+../Core/Src/main.c(366): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  					PRINT_UART("%.2f\n", imu_data_copy.roll * RAD2DEG);
+../Core/Src/main.c(368): warning:  #223-D: function "snprintf" declared implicitly
+  					PRINT_UART("%.2f\n",imu_data_copy.pitch * RAD2DEG );
+../Core/Src/main.c(368): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  					PRINT_UART("%.2f\n",imu_data_copy.pitch * RAD2DEG );
+../Core/Src/main.c(370): warning:  #223-D: function "snprintf" declared implicitly
+  					PRINT_UART("%.2f\n", imu_data_copy.yaw * RAD2DEG);
+../Core/Src/main.c(370): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+  					PRINT_UART("%.2f\n", imu_data_copy.yaw * RAD2DEG);
+../Core/Src/main.c: 6 warnings, 0 errors
 linking...
-Program Size: Code=12724 RO-data=540 RW-data=152 ZI-data=20504  
+Program Size: Code=25296 RO-data=904 RW-data=224 ZI-data=20536  
 FromELF: creating hex file...
-"c-embed-imic-2024nov\c-embed-imic-2024nov.axf" - 0 Error(s), 4 Warning(s).
+"c-embed-imic-2024nov\c-embed-imic-2024nov.axf" - 0 Error(s), 6 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -66,7 +68,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.4.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:05
+Build Time Elapsed:  00:00:04
 </pre>
 </body>
 </html>

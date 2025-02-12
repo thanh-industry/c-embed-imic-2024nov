@@ -22,6 +22,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <string.h> 
+#include "mpu6050.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -58,6 +60,11 @@ const osThreadAttr_t mpuTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+/* Definitions for imuQueue */
+osMessageQueueId_t imuQueueHandle;
+const osMessageQueueAttr_t imuQueue_attributes = {
+  .name = "imuQueue"
+};
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -76,15 +83,13 @@ void mpuTaskFunc(void *argument);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
-#define PRINT_UART(f_, ...)                          \
-    do {                                            \
-        char _buffer[1024];                         \
-        snprintf(_buffer, sizeof(_buffer), f_, ##__VA_ARGS__); \
-        HAL_UART_Transmit(&huart4, (uint8_t *)_buffer, strlen(_buffer), 1000); \
+char data = 0;
+#define PRINT_UART(f_, ...)                          														\
+    do {                                            														\
+        char _buffer[1024];                         														\
+        snprintf(_buffer, sizeof(_buffer), f_, ##__VA_ARGS__); 									\
+        HAL_UART_Transmit(&huart4, (uint8_t *)_buffer, strlen(_buffer), 1000); 	\
     } while (0);
-
-
 
 
 /* USER CODE END 0 */
@@ -121,7 +126,7 @@ int main(void)
   MX_UART4_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-	
+
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -138,6 +143,10 @@ int main(void)
   /* USER CODE BEGIN RTOS_TIMERS */
   /* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
+
+  /* Create the queue(s) */
+  /* creation of imuQueue */
+  imuQueueHandle = osMessageQueueNew (1, sizeof(float), &imuQueue_attributes);
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
@@ -328,7 +337,50 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+typedef struct {
+	float roll;
+	float pitch;
+	float yaw;
+}imu_data_t;
 
+char buff[20];
+uint8_t buff_idx = 0;
+uint8_t flag_uart = 0;
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
+	if(huart->Instance == huart4.Instance){
+			if(data != '\n')
+				buff[buff_idx++] = data;
+			else
+				flag_uart = 1;
+			HAL_UART_Receive_IT(&huart4, (uint8_t *)&data, 1);
+	}
+}
+
+imu_data_t imu_data_copy;
+void string_handle(const char *cmd){
+		imu_data_t *pdata;
+			if(osMessageQueueGet(imuQueueHandle, (void *)&pdata, NULL, 0) == osOK) {
+				imu_data_copy = *pdata; 		 
+				if(strcmp(cmd, "get roll") == 0){
+					PRINT_UART("%.2f\n", imu_data_copy.roll * RAD2DEG);
+				} else if (strcmp(cmd, "get pitch") == 0) {
+					PRINT_UART("%.2f\n",imu_data_copy.pitch * RAD2DEG );
+				} else if (strcmp(cmd, "get yaw") == 0) {
+					PRINT_UART("%.2f\n", imu_data_copy.yaw * RAD2DEG);
+				}
+				vPortFree(pdata);      
+		}
+}
+
+void uart_handle(){
+	if(flag_uart){
+		flag_uart = 0;
+		string_handle(buff);
+		memset(buff, 0, buff_idx);
+		buff_idx = 0;
+	}
+}
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_uartTaskFunc */
@@ -341,12 +393,13 @@ static void MX_GPIO_Init(void)
 void uartTaskFunc(void *argument)
 {
   /* USER CODE BEGIN 5 */
+	HAL_UART_Receive_IT(&huart4, (uint8_t *)&data, 1);
+	osDelay(10);
   /* Infinite loop */
   for(;;)
   {
-		PRINT_UART("Hello\n");
-		HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12 | GPIO_PIN_13);
-    osDelay(500);
+		uart_handle();
+		osDelay(500);
   }
   /* USER CODE END 5 */
 }
@@ -361,11 +414,22 @@ void uartTaskFunc(void *argument)
 void mpuTaskFunc(void *argument)
 {
   /* USER CODE BEGIN mpuTaskFunc */
+	mpu_init(&hi2c1);
+	osDelay(10);
   /* Infinite loop */
   for(;;)
   {
-		PRINT_UART("Hello 2\n");
-    osDelay(500);
+	  	// initial dynamic memory
+		imu_data_t *pdata = pvPortMalloc(sizeof(imu_data_t));
+
+		// update data
+		pdata->roll = mpu_get_roll();
+		pdata->pitch = mpu_get_pitch();
+		pdata->yaw = mpu_get_yaw();
+
+		// put data to queue
+		if(osMessageQueuePut(imuQueueHandle, (void *)&pdata, 0, osWaitForever) != osOK);
+		osDelay(500);
   }
   /* USER CODE END mpuTaskFunc */
 }

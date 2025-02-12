@@ -44,3 +44,6 @@ c-embed-imic-2024nov\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/
 c-embed-imic-2024nov\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
 c-embed-imic-2024nov\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
 c-embed-imic-2024nov\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
+c-embed-imic-2024nov\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+c-embed-imic-2024nov\main.o: ../Core/My_Lib/mpu6050.h
+c-embed-imic-2024nov\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h

@@ -843,6 +843,16 @@
               <FileType>5</FileType>
               <FilePath>..\Core\My_Lib\led.h</FilePath>
             </File>
+            <File>
+              <FileName>mpu6050.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\My_Lib\mpu6050.c</FilePath>
+            </File>
+            <File>
+              <FileName>mpu6050.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Core\My_Lib\mpu6050.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

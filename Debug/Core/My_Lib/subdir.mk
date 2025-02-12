@@ -5,23 +5,29 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../Core/My_Lib/InputCapture.c \
 ../Core/My_Lib/exti.c \
 ../Core/My_Lib/gpio.c \
 ../Core/My_Lib/led.c \
+../Core/My_Lib/mpu6050.c \
 ../Core/My_Lib/register_helpers.c \
 ../Core/My_Lib/timer.c 
 
 OBJS += \
+./Core/My_Lib/InputCapture.o \
 ./Core/My_Lib/exti.o \
 ./Core/My_Lib/gpio.o \
 ./Core/My_Lib/led.o \
+./Core/My_Lib/mpu6050.o \
 ./Core/My_Lib/register_helpers.o \
 ./Core/My_Lib/timer.o 
 
 C_DEPS += \
+./Core/My_Lib/InputCapture.d \
 ./Core/My_Lib/exti.d \
 ./Core/My_Lib/gpio.d \
 ./Core/My_Lib/led.d \
+./Core/My_Lib/mpu6050.d \
 ./Core/My_Lib/register_helpers.d \
 ./Core/My_Lib/timer.d 
 
@@ -33,7 +39,7 @@ Core/My_Lib/%.o Core/My_Lib/%.su Core/My_Lib/%.cyclo: ../Core/My_Lib/%.c Core/My
 clean: clean-Core-2f-My_Lib
 
 clean-Core-2f-My_Lib:
-	-$(RM) ./Core/My_Lib/exti.cyclo ./Core/My_Lib/exti.d ./Core/My_Lib/exti.o ./Core/My_Lib/exti.su ./Core/My_Lib/gpio.cyclo ./Core/My_Lib/gpio.d ./Core/My_Lib/gpio.o ./Core/My_Lib/gpio.su ./Core/My_Lib/led.cyclo ./Core/My_Lib/led.d ./Core/My_Lib/led.o ./Core/My_Lib/led.su ./Core/My_Lib/register_helpers.cyclo ./Core/My_Lib/register_helpers.d ./Core/My_Lib/register_helpers.o ./Core/My_Lib/register_helpers.su ./Core/My_Lib/timer.cyclo ./Core/My_Lib/timer.d ./Core/My_Lib/timer.o ./Core/My_Lib/timer.su
+	-$(RM) ./Core/My_Lib/InputCapture.cyclo ./Core/My_Lib/InputCapture.d ./Core/My_Lib/InputCapture.o ./Core/My_Lib/InputCapture.su ./Core/My_Lib/exti.cyclo ./Core/My_Lib/exti.d ./Core/My_Lib/exti.o ./Core/My_Lib/exti.su ./Core/My_Lib/gpio.cyclo ./Core/My_Lib/gpio.d ./Core/My_Lib/gpio.o ./Core/My_Lib/gpio.su ./Core/My_Lib/led.cyclo ./Core/My_Lib/led.d ./Core/My_Lib/led.o ./Core/My_Lib/led.su ./Core/My_Lib/mpu6050.cyclo ./Core/My_Lib/mpu6050.d ./Core/My_Lib/mpu6050.o ./Core/My_Lib/mpu6050.su ./Core/My_Lib/register_helpers.cyclo ./Core/My_Lib/register_helpers.d ./Core/My_Lib/register_helpers.o ./Core/My_Lib/register_helpers.su ./Core/My_Lib/timer.cyclo ./Core/My_Lib/timer.d ./Core/My_Lib/timer.o ./Core/My_Lib/timer.su
 
 .PHONY: clean-Core-2f-My_Lib
 

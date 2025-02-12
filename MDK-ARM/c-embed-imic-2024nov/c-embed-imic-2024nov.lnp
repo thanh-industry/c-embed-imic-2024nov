@@ -29,6 +29,7 @@
 "c-embed-imic-2024nov\exti.o"
 "c-embed-imic-2024nov\timer.o"
 "c-embed-imic-2024nov\led.o"
+"c-embed-imic-2024nov\mpu6050.o"
 "c-embed-imic-2024nov\croutine.o"
 "c-embed-imic-2024nov\event_groups.o"
 "c-embed-imic-2024nov\list.o"
