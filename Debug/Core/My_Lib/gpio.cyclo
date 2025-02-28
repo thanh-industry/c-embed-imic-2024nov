@@ -1,0 +1,6 @@
+../Core/My_Lib/gpio.c:3:6:gpio_init	1
+../Core/My_Lib/gpio.c:22:6:gpio_mode	4
+../Core/My_Lib/gpio.c:62:6:gpio_write	4
+../Core/My_Lib/gpio.c:80:9:gpio_is_pin	1
+../Core/My_Lib/gpio.c:90:6:gpio_toggle	2
+../Core/My_Lib/gpio.c:106:10:gpio_read	2

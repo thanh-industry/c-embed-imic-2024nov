@@ -1,0 +1,3 @@
+../Core/My_Lib/led.c:9:6:led_blink	16	static
+../Core/My_Lib/led.c:14:6:led_blink_all	24	static
+../Core/My_Lib/led.c:21:6:led_chase	24	static

@@ -6,7 +6,7 @@
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2024 STMicroelectronics.
+ * Copyright (c) 2025 STMicroelectronics.
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <string.h> 
+#include <string.h>
 #include "mpu6050.h"
 /* USER CODE END Includes */
 
@@ -50,13 +50,13 @@ UART_HandleTypeDef huart4;
 osThreadId_t uartTaskHandle;
 const osThreadAttr_t uartTask_attributes = {
   .name = "uartTask",
-  .stack_size = 128 * 4,
+  .stack_size = 512 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
-/* Definitions for mpuTask */
-osThreadId_t mpuTaskHandle;
-const osThreadAttr_t mpuTask_attributes = {
-  .name = "mpuTask",
+/* Definitions for t1 */
+osThreadId_t t1Handle;
+const osThreadAttr_t t1_attributes = {
+  .name = "t1",
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
@@ -65,6 +65,11 @@ osMessageQueueId_t imuQueueHandle;
 const osMessageQueueAttr_t imuQueue_attributes = {
   .name = "imuQueue"
 };
+/* Definitions for myMutex01 */
+osMutexId_t myMutex01Handle;
+const osMutexAttr_t myMutex01_attributes = {
+  .name = "myMutex01"
+};
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -72,8 +77,8 @@ const osMessageQueueAttr_t imuQueue_attributes = {
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_UART4_Init(void);
 static void MX_I2C1_Init(void);
+static void MX_UART4_Init(void);
 void uartTaskFunc(void *argument);
 void mpuTaskFunc(void *argument);
 
@@ -83,15 +88,26 @@ void mpuTaskFunc(void *argument);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-char data = 0;
 #define PRINT_UART(f_, ...)                          														\
     do {                                            														\
-        char _buffer[1024];                         														\
+        char _buffer[256];                         														\
         snprintf(_buffer, sizeof(_buffer), f_, ##__VA_ARGS__); 									\
         HAL_UART_Transmit(&huart4, (uint8_t *)_buffer, strlen(_buffer), 1000); 	\
     } while (0);
 
+typedef struct {
+	float roll;
+	float pitch;
+	float yaw;
+} imu_data_t;
 
+uint8_t data = 0;
+
+void check_task(osMutexId_t *p){
+	if (p == NULL){
+		Error_Handler();
+	}
+}
 /* USER CODE END 0 */
 
 /**
@@ -123,48 +139,53 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_UART4_Init();
   MX_I2C1_Init();
+  MX_UART4_Init();
   /* USER CODE BEGIN 2 */
-
+	HAL_UART_Receive_IT(&huart4, &data, 1);
+	mpu_init(&hi2c1);
+	osDelay(10);
   /* USER CODE END 2 */
 
   /* Init scheduler */
   osKernelInitialize();
-
+  /* Create the mutex(es) */
+  /* creation of myMutex01 */
+  myMutex01Handle = osMutexNew(&myMutex01_attributes);
+  check_task(myMutex01Handle);
   /* USER CODE BEGIN RTOS_MUTEX */
-  /* add mutexes, ... */
+	/* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
-  /* add semaphores, ... */
+	/* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
 
   /* USER CODE BEGIN RTOS_TIMERS */
-  /* start timers, add new ones, ... */
+	/* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
 
   /* Create the queue(s) */
   /* creation of imuQueue */
-  imuQueueHandle = osMessageQueueNew (1, sizeof(float), &imuQueue_attributes);
-
+  imuQueueHandle = osMessageQueueNew (5, sizeof(imu_data_t *), &imuQueue_attributes);
+  check_task(imuQueueHandle);
   /* USER CODE BEGIN RTOS_QUEUES */
-  /* add queues, ... */
+	/* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
   /* creation of uartTask */
   uartTaskHandle = osThreadNew(uartTaskFunc, NULL, &uartTask_attributes);
-
-  /* creation of mpuTask */
-  mpuTaskHandle = osThreadNew(mpuTaskFunc, NULL, &mpuTask_attributes);
-
+  check_task(uartTaskHandle);
+  /* creation of t1 */
+  t1Handle = osThreadNew(mpuTaskFunc, NULL, &t1_attributes);
+  check_task(t1Handle);
   /* USER CODE BEGIN RTOS_THREADS */
-  /* add threads, ... */
+	/* add threads, ... */
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
-  /* add events, ... */
+	/* add events, ... */
   /* USER CODE END RTOS_EVENTS */
 
   /* Start scheduler */
@@ -174,13 +195,11 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
-  {
+	while (1) {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		
-  }
+	}
   /* USER CODE END 3 */
 }
 
@@ -201,12 +220,13 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 4;
-  RCC_OscInitStruct.PLL.PLLN = 50;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
+  RCC_OscInitStruct.PLL.PLLM = 8;
+  RCC_OscInitStruct.PLL.PLLN = 72;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 7;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
@@ -221,9 +241,9 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV2;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
   {
     Error_Handler();
   }
@@ -315,18 +335,16 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12|GPIO_PIN_13, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOD, LD4_Pin|LD3_Pin|LD5_Pin|LD6_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : CLK_IN_Pin */
-  GPIO_InitStruct.Pin = CLK_IN_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  /*Configure GPIO pin : BOOT1_Pin */
+  GPIO_InitStruct.Pin = BOOT1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  GPIO_InitStruct.Alternate = GPIO_AF5_SPI2;
-  HAL_GPIO_Init(CLK_IN_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(BOOT1_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PD12 PD13 */
-  GPIO_InitStruct.Pin = GPIO_PIN_12|GPIO_PIN_13;
+  /*Configure GPIO pins : LD4_Pin LD3_Pin LD5_Pin LD6_Pin */
+  GPIO_InitStruct.Pin = LD4_Pin|LD3_Pin|LD5_Pin|LD6_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -337,100 +355,114 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-typedef struct {
-	float roll;
-	float pitch;
-	float yaw;
-}imu_data_t;
-
-char buff[20];
+uint8_t buff[20];
 uint8_t buff_idx = 0;
 uint8_t flag_uart = 0;
+imu_data_t imu_data_copy;
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
-	if(huart->Instance == huart4.Instance){
-			if(data != '\n')
-				buff[buff_idx++] = data;
-			else
-				flag_uart = 1;
-			HAL_UART_Receive_IT(&huart4, (uint8_t *)&data, 1);
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
+	if (huart->Instance == huart4.Instance) {
+		if (data != '\n')
+			buff[buff_idx++] = data;
+		else
+			flag_uart = 1;
+		HAL_UART_Receive_IT(&huart4, (uint8_t*) &data, 1);
 	}
 }
 
-imu_data_t imu_data_copy;
-void string_handle(const char *cmd){
-		imu_data_t *pdata;
-			if(osMessageQueueGet(imuQueueHandle, (void *)&pdata, NULL, 0) == osOK) {
-				imu_data_copy = *pdata; 		 
-				if(strcmp(cmd, "get roll") == 0){
-					PRINT_UART("%.2f\n", imu_data_copy.roll * RAD2DEG);
-				} else if (strcmp(cmd, "get pitch") == 0) {
-					PRINT_UART("%.2f\n",imu_data_copy.pitch * RAD2DEG );
-				} else if (strcmp(cmd, "get yaw") == 0) {
-					PRINT_UART("%.2f\n", imu_data_copy.yaw * RAD2DEG);
-				}
-				vPortFree(pdata);      
-		}
+
+uint8_t msg_cnt = 0;
+void string_handle(const uint8_t *cmd) {
+	msg_cnt = osMessageQueueGetCount(imuQueueHandle);
+	while(msg_cnt){
+		imu_data_t *data = NULL;
+		osMessageQueueGet(imuQueueHandle, (void *)&data, 0, osWaitForever);
+		msg_cnt--;
+	}
+
+    imu_data_t *pdata = NULL;
+    if (osMessageQueueGet(imuQueueHandle, (void *)&pdata, 0, osWaitForever) == osOK) {
+
+
+        // load data
+        if (strcmp(cmd, "get roll") == 0) {
+            PRINT_UART("roll: %.2f\n", pdata->roll * RAD2DEG);
+        } else if (strcmp(cmd, "get pitch") == 0) {
+            PRINT_UART("pitch: %.2f\n", imu_data_copy.pitch * RAD2DEG);
+        } else if (strcmp(cmd, "get yaw") == 0) {
+            PRINT_UART("yaw: %.2f\n", imu_data_copy.yaw * RAD2DEG);
+        }
+        // free allocate
+        vPortFree(pdata);
+    }
 }
 
-void uart_handle(){
-	if(flag_uart){
+void uart_handle() {
+	if (flag_uart) {
 		flag_uart = 0;
 		string_handle(buff);
 		memset(buff, 0, buff_idx);
 		buff_idx = 0;
 	}
 }
+
+
+void imu_handle(){
+
+}
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_uartTaskFunc */
 /**
-  * @brief  Function implementing the uartTask thread.
-  * @param  argument: Not used
-  * @retval None
-  */
+ * @brief  Function implementing the uartTask thread.
+ * @param  argument: Not used
+ * @retval None
+ */
 /* USER CODE END Header_uartTaskFunc */
 void uartTaskFunc(void *argument)
 {
   /* USER CODE BEGIN 5 */
-	HAL_UART_Receive_IT(&huart4, (uint8_t *)&data, 1);
-	osDelay(10);
-  /* Infinite loop */
-  for(;;)
-  {
-		uart_handle();
+
+	/* Infinite loop */
+	for (;;) {
+		//if (osMutexAcquire(myMutex01Handle, 0) == osOK){
+			uart_handle();
+			//osMutexRelease(myMutex01Handle);
+		//}
 		osDelay(500);
-  }
+	}
   /* USER CODE END 5 */
 }
 
 /* USER CODE BEGIN Header_mpuTaskFunc */
 /**
-* @brief Function implementing the mpuTask thread.
-* @param argument: Not used
-* @retval None
-*/
+ * @brief Function implementing the mpuTask thread.
+ * @param argument: Not used
+ * @retval None
+ */
 /* USER CODE END Header_mpuTaskFunc */
 void mpuTaskFunc(void *argument)
 {
   /* USER CODE BEGIN mpuTaskFunc */
-	mpu_init(&hi2c1);
-	osDelay(10);
-  /* Infinite loop */
-  for(;;)
-  {
-	  	// initial dynamic memory
-		imu_data_t *pdata = pvPortMalloc(sizeof(imu_data_t));
 
-		// update data
-		pdata->roll = mpu_get_roll();
-		pdata->pitch = mpu_get_pitch();
-		pdata->yaw = mpu_get_yaw();
-
-		// put data to queue
-		if(osMessageQueuePut(imuQueueHandle, (void *)&pdata, 0, osWaitForever) != osOK);
-		osDelay(500);
-  }
+	/* Infinite loop */
+	for (;;) {
+		//if(osMutexAcquire(myMutex01Handle, 0) == osOK){
+			// initial dynamic memory
+			imu_data_t *pdata = pvPortMalloc(sizeof(imu_data_t));
+			if(pdata != NULL){
+				// update data
+				pdata->roll = mpu_get_roll();
+				pdata->pitch = mpu_get_pitch();
+				pdata->yaw = mpu_get_yaw();
+				// put data to queue
+	            if (osMessageQueuePut(imuQueueHandle, (void *)&pdata, 0, osWaitForever) != osOK) {
+	            }
+			}
+			//osMutexRelease(myMutex01Handle);
+		//}
+		osDelay(200);
+	}
   /* USER CODE END mpuTaskFunc */
 }
 
@@ -462,11 +494,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
-  __disable_irq();
-  while (1)
-  {
-  }
+	/* User can add his own implementation to report the HAL error return state */
+	__disable_irq();
+	while (1) {
+		for(uint8_t i = 0; i < 4; i++){
+			HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12 << i);
+		}
+		HAL_Delay(500);
+	}
   /* USER CODE END Error_Handler_Debug */
 }
 

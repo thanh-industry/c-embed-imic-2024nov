@@ -1,0 +1,2 @@
+../Core/My_Lib/timer.c:2:6:timer_basic_6_init	1
+../Core/My_Lib/timer.c:21:10:get_timer_basic_6	1

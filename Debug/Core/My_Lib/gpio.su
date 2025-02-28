@@ -1,0 +1,6 @@
+../Core/My_Lib/gpio.c:3:6:gpio_init	32	static
+../Core/My_Lib/gpio.c:22:6:gpio_mode	16	static
+../Core/My_Lib/gpio.c:62:6:gpio_write	16	static
+../Core/My_Lib/gpio.c:80:9:gpio_is_pin	16	static
+../Core/My_Lib/gpio.c:90:6:gpio_toggle	24	static
+../Core/My_Lib/gpio.c:106:10:gpio_read	24	static

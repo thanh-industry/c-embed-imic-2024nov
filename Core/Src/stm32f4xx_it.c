@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -91,6 +91,10 @@ void HardFault_Handler(void)
   while (1)
   {
     /* USER CODE BEGIN W1_HardFault_IRQn 0 */
+		for(uint8_t i = 0; i < 4; i++){
+			HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12 << i);
+		}
+		HAL_Delay(500);
     /* USER CODE END W1_HardFault_IRQn 0 */
   }
 }
